@@ -1,10 +1,11 @@
 
-import { defineQuery, IWorld, pipe } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size } from './comps'
+import { defineQuery, IWorld, pipe, removeEntity } from 'bitecs'
+import { Player, Vel, Acc, Pos, Size, Bullet } from './comps'
 
 
 const vel_query = defineQuery([Vel, Acc])
 const pos_query = defineQuery([Pos, Vel])
+const bullets_query = defineQuery([Bullet, Pos])
 
 export default pipe(
 
@@ -41,6 +42,25 @@ export default pipe(
 
 			Pos.x[pid] += Vel.x[pid]
 			Pos.y[pid] += Vel.y[pid]
+		}
+
+		return world
+	},
+
+	/**
+	 * 
+	 * › REMOVE OUTSIDE BULLETS ‹
+	 *
+	 */
+
+	 (world: IWorld) => {
+		const entities = bullets_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const pid = entities[i]
+
+			if (Pos.x[pid] < -.1 || Pos.x[pid] > 1.1 || Pos.y[pid] < -.1 || Pos.y[pid] > 1.1)
+				removeEntity(world, pid)
 		}
 
 		return world

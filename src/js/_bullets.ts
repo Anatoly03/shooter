@@ -146,6 +146,120 @@ export default [
 		return world
 	},
 
+	/*
+	 * FIRE RING 2
+	 */
+
+	async (world: IWorld) => {
+		let amount = 50
+		let radius = .05
+
+		let entities = []
+
+		for (let i = 0; i < amount * 3; i++) {
+			let eid = addEntity(world)
+			entities.push(eid)
+
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+
+			Pos.x[eid] = .5 + Math.sin(i / amount * Math.PI) * radius
+			Pos.y[eid] = .5 + Math.cos(i / amount * Math.PI) * radius
+			Size.r[eid] = .005
+
+			await wait(200 / (i + 1))
+
+			setTimeout(() => {
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+
+				Acc.x[eid] = (Math.random() - .5) * .0001
+				Acc.y[eid] = (Math.random() - .5) * .0001
+			}, 200)
+
+		}
+
+		await wait(2000)
+
+		return world
+	},
+
+	/*
+	 * FIRE HALF RING
+	 */
+
+	async (world: IWorld) => {
+		let amount = 50
+		let radius = .05
+
+		let entities = []
+
+		for (let i = 0; i < amount * 3; i++) {
+			let eid = addEntity(world)
+			entities.push(eid)
+
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+
+			Pos.x[eid] = .5 //+ Math.cos(i / amount * Math.PI) * radius
+			//Pos.y[eid] = Math.sin(i / amount * Math.PI) * radius
+			Size.r[eid] = .005
+
+			setTimeout(() => {
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+
+				Acc.x[eid] = Math.cos(i / amount * Math.PI) * .0001
+				Acc.y[eid] = Math.sin(i / amount * Math.PI) * .0001
+			}, 200)
+
+		}
+
+		await wait(2000)
+
+		return world
+	},
+
+	/*
+	 * FIRE HALF RING HUGE
+	 */
+
+	async (world: IWorld) => {
+		let amount = 20
+
+		let entities = []
+
+		for (let i = 0; i < amount * 3; i++) {
+			let eid = addEntity(world)
+			entities.push(eid)
+
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+
+			Pos.x[eid] = .5
+			Size.r[eid] = .05
+
+			setTimeout(() => {
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+
+				Vel.x[eid] = Math.cos(i / amount * Math.PI) * .01
+				Vel.y[eid] = Math.sin(i / amount * Math.PI) * .01
+
+				Acc.x[eid] = - Math.cos(i / amount * Math.PI) * .00002
+				Acc.y[eid] = - Math.sin(i / amount * Math.PI) * .00002
+			}, 200)
+
+		}
+
+		await wait(2000)
+
+		return world
+	},
+
 ]
 
 async function wait(ms: number) {
