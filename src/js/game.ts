@@ -21,17 +21,17 @@ export const game = {
 
 	update() {
 		if ((keys['w'] && !keys['s'])) {
-			Pos.y[this.pid] -= .005
+			Pos.y[this.pid] -= keys['x'] ? .002 : .005
 		} else if (keys['s'] && !keys['w']) {
-			Pos.y[this.pid] += .005
+			Pos.y[this.pid] += keys['x'] ? .002 : .005
 			//} else {
 			//Control.y[this.pid] = 0
 		}
 
 		if (keys['d'] && !keys['a']) {
-			Pos.x[this.pid] += .005
+			Pos.x[this.pid] += keys['x'] ? .002 : .005
 		} else if (keys['a'] && !keys['d']) {
-			Pos.x[this.pid] -= .005
+			Pos.x[this.pid] -= keys['x'] ? .002 : .005
 			//} else {
 			//Control.x[this.pid] = 0
 		}
