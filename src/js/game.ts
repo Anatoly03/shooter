@@ -2,6 +2,7 @@
 import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
 import { Acc, Bullet, Player, Pos, Size, Vel } from './comps'
+import blts from './_bullets'
 import physics from './physics'
 
 export const world = createWorld()
@@ -24,25 +25,10 @@ export const game = {
 		this.spawn()
 	},
 
-	spawn() {
-		for (let i = 0; i < Math.random() * 25; i++) {
-			let eid = addEntity(world)
-			addComponent(world, Bullet, eid)
-			addComponent(world, Pos, eid)
-			addComponent(world, Size, eid)
-			addComponent(world, Vel, eid)
-			addComponent(world, Acc, eid)
-
-			Pos.x[eid] = Math.random()
-			Pos.y[eid] = 0
-
-			Acc.x[eid] = (Math.random() - .5) * .0001
-			Acc.y[eid] = Math.random() * .00005
-
-			Size.r[eid] = .005
-		}
-
-		setTimeout(this.spawn.bind(this), 200)
+	async spawn() {
+		await blts[Math.floor(Math.random() * blts.length)](world)
+		requestAnimationFrame(this.spawn.bind(this))
+		//this.spawn.bind(this)()
 	},
 
 	update() {
