@@ -46,8 +46,8 @@ export const game = {
 	},
 
 	update() {
-		let x = (keys['a'] || keys['left'] ? -1 : 0) + (keys['d'] || keys['right'] ? 1 : 0)
-		let y = (keys['w'] || keys['up'] ? -1 : 0) + (keys['s'] || keys['down'] ? 1 : 0)
+		let x = (keys['a'] || keys['arrowleft'] ? -1 : 0) + (keys['d'] || keys['arrowright'] ? 1 : 0)
+		let y = (keys['w'] || keys['arrowup'] ? -1 : 0) + (keys['s'] || keys['arrowdown'] ? 1 : 0)
 
 		Vel.x[this.pid] = (keys['x'] ? .002 : .005) * x
 		Vel.y[this.pid] = (keys['x'] ? .002 : .005) * y
