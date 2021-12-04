@@ -10,7 +10,7 @@ export let ctx: CanvasRenderingContext2D
 export let keys: { [key: string]: boolean; } = {}
 
 let lastCalledTime = Date.now();
-let delta = 0;
+let delta = 1;
 export let FPS = 0;
 
 export let app = {
