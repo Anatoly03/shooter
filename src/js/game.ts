@@ -42,6 +42,12 @@ export const game = {
 		ctx.arc(offset + Pos.x[this.pid] * size, offset + Pos.y[this.pid] * size, Size.r[this.pid] * size, 0, 2 * Math.PI)
 		ctx.fill()
 
+		ctx.textAlign = 'right'
+		ctx.textBaseline = 'bottom'
+		ctx.fillStyle = 'white'
+		ctx.font = '20px Righteous'
+		ctx.fillText(""+Math.round(FPS), size + offset - 5, size + offset - 5)
+
 		//
 		// UI
 		//
@@ -57,6 +63,13 @@ export const game = {
 		ctx.strokeStyle = 'white'
 		ctx.lineWidth = 2
 		ctx.strokeRect(offset, offset, size, size)
+
+		// Text
+		ctx.fillStyle = 'white'
+		ctx.font = '20px Righteous'
+		ctx.textAlign = 'left'
+		ctx.textBaseline = 'middle'
+
 	},
 
 	onKeyDown(event: KeyboardEvent) {
