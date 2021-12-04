@@ -2,6 +2,7 @@
 import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
 import { Player, Pos, Size, Vel } from './comps'
+import physics from './physics'
 
 export const world = createWorld()
 
@@ -23,8 +24,10 @@ export const game = {
 		let x = (keys['a'] || keys['left'] ? -1 : 0) + (keys['d'] || keys['right'] ? 1 : 0)
 		let y = (keys['w'] || keys['up'] ? -1 : 0) + (keys['s'] || keys['down'] ? 1 : 0)
 
-		Pos.x[this.pid] += (keys[' '] ? .002 : .005) * x
-		Pos.y[this.pid] += (keys[' '] ? .002 : .005) * y
+		Vel.x[this.pid] = (keys[' '] ? .002 : .005) * x
+		Vel.y[this.pid] = (keys[' '] ? .002 : .005) * y
+
+		physics(world)
 	},
 
 	render() {
