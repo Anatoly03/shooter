@@ -20,7 +20,7 @@ export const Pos = defineComponent({
 	y: Types.f64,
 })
 
-export const Vec = defineComponent({
+export const Vel = defineComponent({
 	x: Types.f64,
 	y: Types.f64,
 })

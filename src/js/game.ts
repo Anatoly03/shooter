@@ -1,7 +1,7 @@
 
 import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
-import { Player, Pos, Size, Vec } from './comps'
+import { Player, Pos, Size, Vel } from './comps'
 
 export const world = createWorld()
 
@@ -11,7 +11,7 @@ export const game = {
 		addComponent(world, Player, this.pid)
 		addComponent(world, Pos, this.pid)
 		addComponent(world, Size, this.pid)
-		addComponent(world, Vec, this.pid)
+		addComponent(world, Vel, this.pid)
 
 		Pos.x[this.pid] = .5
 		Pos.y[this.pid] = .5
