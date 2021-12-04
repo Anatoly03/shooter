@@ -49,7 +49,7 @@ export default [
 
 	async (world: IWorld) => {
 
-		let amount = Math.random() * 100
+		let amount = Math.random() * 500
 
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
@@ -67,7 +67,38 @@ export default [
 
 			Size.r[eid] = .005
 
-			await wait (Math.random() * 100)
+			await wait (Math.random() * 30)
+		}
+
+		await wait (2000)
+
+		return world
+	},
+
+	/*
+	 * RAIN
+	 */
+
+	async (world: IWorld) => {
+
+		let amount = Math.random() * 300
+
+		for (let i = 0; i < amount; i++) {
+			let eid = addEntity(world)
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+			addComponent(world, Vel, eid)
+
+			Pos.x[eid] = Math.random() * 2
+			Pos.y[eid] = 0
+
+			Vel.x[eid] = -.005
+			Vel.y[eid] = .01
+
+			Size.r[eid] = .005
+
+			await wait (Math.random() * 30)
 		}
 
 		await wait (2000)
