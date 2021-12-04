@@ -31,18 +31,32 @@ export const game = {
 		let offset = 50
 		let size = Math.min(width, height) - 2 * offset
 
+		// Background
 		ctx.fillStyle = 'black'
 		ctx.fillRect(0, 0, width, height)
+
+		// Game Content
+
+		ctx.fillStyle = 'green'
+		ctx.beginPath()
+		ctx.arc(offset + Pos.x[this.pid] * size, offset + Pos.y[this.pid] * size, Size.r[this.pid] * size, 0, 2 * Math.PI)
+		ctx.fill()
+
+		//
+		// UI
+		//
+
+		// Clip
+		ctx.fillStyle = 'black'
+		ctx.fillRect(0, 0, offset, height) // left
+		ctx.fillRect(0, 0, width, offset) // top
+		ctx.fillRect(0, height - offset, width, offset) // bottom
+		ctx.fillRect(offset + size, 0, width - offset - size, height) // right
 
 		// Gamescreen Border
 		ctx.strokeStyle = 'white'
 		ctx.lineWidth = 2
 		ctx.strokeRect(offset, offset, size, size)
-
-		ctx.fillStyle = 'green'
-		ctx.beginPath();
-		ctx.arc(offset + Pos.x[this.pid] * size, offset + Pos.y[this.pid] * size, Size.r[this.pid] * size, 0, 2 * Math.PI);
-		ctx.fill();
 	},
 
 	onKeyDown(event: KeyboardEvent) {
