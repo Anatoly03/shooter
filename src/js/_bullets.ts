@@ -38,7 +38,7 @@ export default [
 			Acc.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .0001
 		}
 
-		await wait(1000)
+		await wait(500)
 
 		return world
 	},
@@ -70,7 +70,7 @@ export default [
 			await wait(Math.random() * 30)
 		}
 
-		await wait(2000)
+		await wait(500)
 
 		return world
 	},
@@ -90,8 +90,13 @@ export default [
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
 
-			Pos.x[eid] = Math.random() * 2
-			Pos.y[eid] = 0
+			if (Math.random() > .5) {
+				Pos.x[eid] = Math.random()
+				Pos.y[eid] = 0
+			} else {
+				Pos.x[eid] = 1
+				Pos.y[eid] = Math.random()
+			}
 
 			Vel.x[eid] = -.005
 			Vel.y[eid] = .01
@@ -101,7 +106,7 @@ export default [
 			await wait(Math.random() * 30)
 		}
 
-		await wait(2000)
+		await wait(500)
 
 		return world
 	},
@@ -111,15 +116,13 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let amount = 50
-		let radius = .05
+		let amount = 100
+		let radius = .5
+		let decreasingRadius = true
 
-		let entities = []
-
-		for (let j = 0; j < amount * 5; j++) {
+		for (let j = 0; j < amount * 2; j++) {
 			for (let i of [j, j + amount * .5]) {
 				let eid = addEntity(world)
-				entities.push(eid)
 
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
@@ -129,19 +132,25 @@ export default [
 				Pos.y[eid] = .5 + Math.cos(i / amount * 2 * Math.PI) * radius
 				Size.r[eid] = .005
 
-				await wait(200 / (i + 1))
+				await wait(500 / ((j + 5) ** 5))
 
 				setTimeout(() => {
 					addComponent(world, Vel, eid)
 					addComponent(world, Acc, eid)
 
-					Acc.x[eid] = (Math.random() - .5) * .0001
-					Acc.y[eid] = (Math.random() - .5) * .0001
-				}, 200)
+					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
+					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
+
+					Acc.x[eid] = Math.cos(i / amount * 2 * Math.PI) * .00001 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
+					Acc.y[eid] = - Math.sin(i / amount * 2 * Math.PI) * .00001 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
+				}, 1000)
 			}
+
+			if (decreasingRadius)
+				radius *= .995
 		}
 
-		await wait(2000)
+		await wait(17000)
 
 		return world
 	},
@@ -154,11 +163,8 @@ export default [
 		let amount = 50
 		let radius = .05
 
-		let entities = []
-
 		for (let i = 0; i < amount * 3; i++) {
 			let eid = addEntity(world)
-			entities.push(eid)
 
 			addComponent(world, Bullet, eid)
 			addComponent(world, Pos, eid)
@@ -177,10 +183,9 @@ export default [
 				Acc.x[eid] = (Math.random() - .5) * .0001
 				Acc.y[eid] = (Math.random() - .5) * .0001
 			}, 200)
-
 		}
 
-		await wait(2000)
+		await wait(500)
 
 		return world
 	},
@@ -217,7 +222,7 @@ export default [
 
 		}
 
-		await wait(2000)
+		await wait(500)
 
 		return world
 	},
@@ -240,6 +245,7 @@ export default [
 			addComponent(world, Size, eid)
 
 			Pos.x[eid] = .5
+			Pos.y[eid] = -.05
 			Size.r[eid] = .05
 
 			setTimeout(() => {
@@ -255,7 +261,76 @@ export default [
 
 		}
 
-		await wait(2000)
+		await wait(500)
+
+		return world
+	},
+
+	/*
+	 * HORIZONTAL WALL ATTACKS
+	 */
+
+	async (world: IWorld) => {
+		let waves = Math.random() * 10
+
+		for (let i = 0; i < waves; i++) {
+			let amount = Math.random() * 20 + 30
+
+			for (let j = 0; j < amount; j++) {
+				let x = Math.random()
+
+				let eid = addEntity(world)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, Vel, eid)
+
+				Pos.x[eid] = x
+				Size.r[eid] = .005
+
+				Vel.y[eid] = .01
+			}
+
+			await wait(500)
+		}
+
+		await wait(500)
+
+		return world
+	},
+
+	/*
+	 * VERTICAL LINEAR ATTACKS
+	 */
+
+	async (world: IWorld) => {
+		let amount = Math.random() * 20 + 180
+		let length = 10
+
+		for (let i = 0; i < amount; i++) {
+			let x = Math.random()
+
+			for (let j = 0; j < length; j++) {
+				let eid = addEntity(world)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, Vel, eid)
+
+				Pos.x[eid] = x
+				Pos.y[eid] = - j * .01
+				Size.r[eid] = .005
+
+				Vel.y[eid] = .01
+
+			}
+
+			await wait(Math.random() * 100)
+		}
+
+		await wait(500)
 
 		return world
 	},

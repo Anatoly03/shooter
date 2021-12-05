@@ -11,23 +11,23 @@ const bullets = defineQuery([Bullet, Pos, Size])
 
 export const game = {
 	init() {
-		this.pid = addEntity(world)
-		addComponent(world, Player, this.pid)
-		addComponent(world, Pos, this.pid)
-		addComponent(world, Size, this.pid)
-		addComponent(world, Vel, this.pid)
+		world.pid = addEntity(world)
+		addComponent(world, Player, world.pid)
+		addComponent(world, Pos, world.pid)
+		addComponent(world, Size, world.pid)
+		addComponent(world, Vel, world.pid)
 
-		Pos.x[this.pid] = .5
-		Pos.y[this.pid] = .5
+		Pos.x[world.pid] = .5
+		Pos.y[world.pid] = .5
 
-		Size.r[this.pid] = .005
+		Size.r[world.pid] = .005
 
 		this.spawn()
 	},
 
 	async spawn() {
-		//await blts[6](world)
-		await blts[Math.floor(Math.random() * blts.length)](world)
+		await blts[3](world)
+		//await blts[Math.floor(Math.random() * blts.length)](world)
 		requestAnimationFrame(this.spawn.bind(this))
 		//this.spawn.bind(this)()
 	},
@@ -36,8 +36,8 @@ export const game = {
 		let x = (keys['a'] || keys['arrowleft'] ? -1 : 0) + (keys['d'] || keys['arrowright'] ? 1 : 0)
 		let y = (keys['w'] || keys['arrowup'] ? -1 : 0) + (keys['s'] || keys['arrowdown'] ? 1 : 0)
 
-		Vel.x[this.pid] = (keys['x'] ? .002 : .005) * x
-		Vel.y[this.pid] = (keys['x'] ? .002 : .005) * y
+		Vel.x[world.pid] = (keys['x'] ? .002 : .007) * x
+		Vel.y[world.pid] = (keys['x'] ? .002 : .007) * y
 
 		physics(world)
 	},
@@ -54,7 +54,7 @@ export const game = {
 
 		ctx.fillStyle = 'green'
 		ctx.beginPath()
-		ctx.arc(offset + Pos.x[this.pid] * size, offset + Pos.y[this.pid] * size, Size.r[this.pid] * size, 0, 2 * Math.PI)
+		ctx.arc(offset + Pos.x[world.pid] * size, offset + Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 		ctx.fill()
 
 		ctx.fillStyle = 'red'
