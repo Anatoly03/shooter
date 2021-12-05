@@ -33,3 +33,8 @@ export const Acc = defineComponent({
 export const Size = defineComponent({
 	r: Types.f64,
 })
+
+export const Gravity = defineComponent({
+	eid: Types.ui32,
+	force: Types.f64,
+})

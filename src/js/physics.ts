@@ -1,8 +1,9 @@
 
-import { defineQuery, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet } from './comps'
+import { defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity } from './comps'
 
 
+const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, Pos])
@@ -11,7 +12,35 @@ export default pipe(
 
 	/**
 	 * 
+	 * › SET ACCELERATION ‹
+	 * 
+	 * Acc <- Gravity, Pos
+	 *
+	 */
+
+	 (world: IWorld) => {
+		const entities = acc_gravity_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			if (hasComponent(world, Pos, eid)) {
+				Acc.x[eid] += Gravity.force[eid] * (Pos.x[Gravity.eid[eid]] - Pos.x[eid])
+				Acc.y[eid] += Gravity.force[eid] * (Pos.y[Gravity.eid[eid]] - Pos.y[eid])
+				// F = r1, r2 / d^2
+				//Acc.x[eid] += Gravity.force[eid] * Math.sign(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) / Math.abs(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) ** 2
+				//Acc.y[eid] += Gravity.force[eid] * Math.sign(Pos.y[Gravity.eid[eid]] - Pos.y[eid]) / Math.abs(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) ** 2
+			}
+		}
+
+		return world
+	},
+
+	/**
+	 * 
 	 * › SET VELOCITY ‹
+	 * 
+	 * Vel <- Acc
 	 *
 	 */
 
@@ -19,10 +48,10 @@ export default pipe(
 		const entities = vel_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
-			const pid = entities[i]
+			const eid = entities[i]
 
-			Vel.x[pid] += Acc.x[pid]
-			Vel.y[pid] += Acc.y[pid]
+			Vel.x[eid] += Acc.x[eid]
+			Vel.y[eid] += Acc.y[eid]
 		}
 
 		return world
@@ -31,6 +60,8 @@ export default pipe(
 	/**
 	 * 
 	 * › SET POSITION ‹
+	 * 
+	 * Pos <- Vel
 	 *
 	 */
 
@@ -38,10 +69,10 @@ export default pipe(
 		const entities = pos_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
-			const pid = entities[i]
+			const eid = entities[i]
 
-			Pos.x[pid] += Vel.x[pid]
-			Pos.y[pid] += Vel.y[pid]
+			Pos.x[eid] += Vel.x[eid]
+			Pos.y[eid] += Vel.y[eid]
 		}
 
 		return world
@@ -57,10 +88,10 @@ export default pipe(
 		const entities = bullets_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
-			const pid = entities[i]
+			const eid = entities[i]
 
-			if (Pos.x[pid] < -.1 || Pos.x[pid] > 1.1 || Pos.y[pid] < -.1 || Pos.y[pid] > 1.1)
-				removeEntity(world, pid)
+			if (Pos.x[eid] < -.1 || Pos.x[eid] > 1.1 || Pos.y[eid] < -.1 || Pos.y[eid] > 1.1)
+				removeEntity(world, eid)
 		}
 
 		return world

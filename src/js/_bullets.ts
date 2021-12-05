@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld } from "bitecs";
-import { Acc, Bullet, Player, Pos, Size, Vel } from './comps'
+import { Acc, Bullet, Gravity, Player, Pos, Size, Vel } from './comps'
 
 export default [
 
@@ -48,7 +48,6 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-
 		let amount = Math.random() * 500
 
 		for (let i = 0; i < amount; i++) {
@@ -328,6 +327,38 @@ export default [
 			}
 
 			await wait(Math.random() * 100)
+		}
+
+		await wait(500)
+
+		return world
+	},
+
+	/*
+	 * GRAVITY ATTACKS
+	 */
+
+	async (world: IWorld) => {
+		let amount = Math.random() * 100
+
+		for (let i = 0; i < amount; i++) {
+			let eid = addEntity(world)
+			addComponent(world, Bullet, eid)
+			addComponent(world, Gravity, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+			addComponent(world, Vel, eid)
+			addComponent(world, Acc, eid)
+
+			Pos.x[eid] = Math.random()
+			Pos.y[eid] = 0
+
+			Size.r[eid] = .005
+
+			Gravity.eid[eid] = world.pid
+			Gravity.force[eid] = .000005
+
+			await wait(Math.random() * 30)
 		}
 
 		await wait(500)
