@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld } from "bitecs";
-import { Acc, Bullet, Gravity, Player, Pos, Size, Vel } from './comps'
+import { Acc, Bullet, Gravity, KillOutside, Player, Pos, Size, Vel } from './comps'
 
 export default [
 
@@ -33,6 +33,7 @@ export default [
 			let eid = entities[i]
 			addComponent(world, Vel, eid)
 			addComponent(world, Acc, eid)
+			addComponent(world, KillOutside, eid)
 
 			Acc.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .0001
 			Acc.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .0001
@@ -57,6 +58,7 @@ export default [
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
 			addComponent(world, Acc, eid)
+			addComponent(world, KillOutside, eid)
 
 			Pos.x[eid] = Math.random()
 			Pos.y[eid] = 0
@@ -88,6 +90,7 @@ export default [
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
+			addComponent(world, KillOutside, eid)
 
 			if (Math.random() > .5) {
 				Pos.x[eid] = Math.random()
@@ -126,6 +129,7 @@ export default [
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
+				addComponent(world, KillOutside, eid)
 
 				Pos.x[eid] = .5 + Math.sin(i / amount * 2 * Math.PI) * radius
 				Pos.y[eid] = .5 + Math.cos(i / amount * 2 * Math.PI) * radius
@@ -168,6 +172,7 @@ export default [
 			addComponent(world, Bullet, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
+			addComponent(world, KillOutside, eid)
 
 			Pos.x[eid] = .5 + Math.sin(i / amount * Math.PI) * radius
 			Pos.y[eid] = .5 + Math.cos(i / amount * Math.PI) * radius
@@ -206,6 +211,7 @@ export default [
 			addComponent(world, Bullet, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
+			addComponent(world, KillOutside, eid)
 
 			Pos.x[eid] = .5 //+ Math.cos(i / amount * Math.PI) * radius
 			//Pos.y[eid] = Math.sin(i / amount * Math.PI) * radius
@@ -242,6 +248,7 @@ export default [
 			addComponent(world, Bullet, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
+			addComponent(world, KillOutside, eid)
 
 			Pos.x[eid] = .5
 			Pos.y[eid] = -.05
@@ -284,6 +291,7 @@ export default [
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
+				addComponent(world, KillOutside, eid)
 
 				Pos.x[eid] = x
 				Size.r[eid] = .005
@@ -317,6 +325,7 @@ export default [
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
+				addComponent(world, KillOutside, eid)
 
 				Pos.x[eid] = x
 				Pos.y[eid] = - j * .01
@@ -343,12 +352,14 @@ export default [
 
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
+			
 			addComponent(world, Bullet, eid)
 			addComponent(world, Gravity, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
 			addComponent(world, Acc, eid)
+			addComponent(world, KillOutside, eid)
 
 			Pos.x[eid] = Math.random()
 			Pos.y[eid] = 0

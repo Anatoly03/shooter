@@ -38,3 +38,9 @@ export const Gravity = defineComponent({
 	eid: Types.ui32,
 	force: Types.f64,
 })
+
+//
+// Lifetime
+//
+
+export const KillOutside = defineComponent()

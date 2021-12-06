@@ -1,12 +1,13 @@
 
 import { defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, Pos])
+const kill_query = defineQuery([Bullet, KillOutside])
 
 export default pipe(
 
@@ -106,7 +107,7 @@ export default pipe(
 	 */
 
 	(world: IWorld) => {
-		const entities = bullets_query(world)
+		const entities = kill_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
 			const eid = entities[i]
