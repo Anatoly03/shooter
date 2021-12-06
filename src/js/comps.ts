@@ -9,8 +9,14 @@ import { Types, defineComponent } from 'bitecs'
  */
 
 export const Player = defineComponent()
-export const Bullet = defineComponent()
 export const Point = defineComponent()
+
+//
+// Bullets
+//
+
+export const Bullet = defineComponent()
+export const ActiveBullet = defineComponent() // Only active bullets can kill
 
 //
 // Physics and Position

@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld } from "bitecs";
-import { Acc, Bullet, Gravity, KillOutside, Player, Pos, Size, Vel } from './comps'
+import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, Player, Pos, Size, Vel } from './comps'
 
 export default [
 
@@ -34,6 +34,7 @@ export default [
 			addComponent(world, Vel, eid)
 			addComponent(world, Acc, eid)
 			addComponent(world, KillOutside, eid)
+			addComponent(world, ActiveBullet, eid)
 
 			Acc.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .0001
 			Acc.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .0001
@@ -54,6 +55,7 @@ export default [
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
 			addComponent(world, Bullet, eid)
+			addComponent(world, ActiveBullet, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
@@ -87,6 +89,7 @@ export default [
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
 			addComponent(world, Bullet, eid)
+			addComponent(world, ActiveBullet, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
@@ -140,6 +143,7 @@ export default [
 				setTimeout(() => {
 					addComponent(world, Vel, eid)
 					addComponent(world, Acc, eid)
+					addComponent(world, ActiveBullet, eid)
 
 					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
 					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
@@ -183,6 +187,7 @@ export default [
 			setTimeout(() => {
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
+				addComponent(world, ActiveBullet, eid)
 
 				Acc.x[eid] = (Math.random() - .5) * .0001
 				Acc.y[eid] = (Math.random() - .5) * .0001
@@ -220,6 +225,7 @@ export default [
 			setTimeout(() => {
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
+				addComponent(world, ActiveBullet, eid)
 
 				Acc.x[eid] = Math.cos(i / amount * Math.PI) * .0001
 				Acc.y[eid] = Math.sin(i / amount * Math.PI) * .0001
@@ -257,6 +263,7 @@ export default [
 			setTimeout(() => {
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
+				addComponent(world, ActiveBullet, eid)
 
 				Vel.x[eid] = Math.cos(i / amount * Math.PI) * .01
 				Vel.y[eid] = Math.sin(i / amount * Math.PI) * .01
@@ -288,6 +295,7 @@ export default [
 				let eid = addEntity(world)
 
 				addComponent(world, Bullet, eid)
+				addComponent(world, ActiveBullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
@@ -322,6 +330,7 @@ export default [
 				let eid = addEntity(world)
 
 				addComponent(world, Bullet, eid)
+				addComponent(world, ActiveBullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
@@ -354,6 +363,7 @@ export default [
 			let eid = addEntity(world)
 
 			addComponent(world, Bullet, eid)
+			addComponent(world, ActiveBullet, eid)
 			addComponent(world, Gravity, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)

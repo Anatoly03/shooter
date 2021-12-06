@@ -1,12 +1,12 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const pos_query = defineQuery([Pos, Vel])
-const bullets_query = defineQuery([Bullet, Pos])
+const bullets_query = defineQuery([Bullet, ActiveBullet, Pos])
 const points_query = defineQuery([Point, Pos])
 const kill_query = defineQuery([Bullet, KillOutside])
 
