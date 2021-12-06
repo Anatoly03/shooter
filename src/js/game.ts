@@ -27,8 +27,8 @@ export const game = {
 	},
 
 	async spawn() {
-		let n = 0 // Math.floor(Math.random() * blts.length)
-		console.log(n)
+		let n = Math.floor(Math.random() * blts.length)
+		//console.log(n)
 		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
 		//this.spawn.bind(this)()
@@ -45,8 +45,7 @@ export const game = {
 	},
 
 	render() {
-		let offset = 50
-		let size = Math.min(width, height) - 2 * offset
+		let size = Math.min(width, height)
 
 		// Background
 		ctx.fillStyle = 'black'
@@ -56,7 +55,7 @@ export const game = {
 
 		ctx.fillStyle = 'green'
 		ctx.beginPath()
-		ctx.arc(offset + Pos.x[world.pid] * size, offset + Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
+		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 		ctx.fill()
 
 		ctx.fillStyle = 'red'
@@ -64,7 +63,7 @@ export const game = {
 		for (let i = 0; i < bullet_array.length; i++) {
 			let eid = bullet_array[i]
 			ctx.beginPath()
-			ctx.arc(offset + Pos.x[eid] * size, offset + Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()
 		}
 
@@ -73,7 +72,7 @@ export const game = {
 		for (let i = 0; i < point_array.length; i++) {
 			let eid = point_array[i]
 			ctx.beginPath()
-			ctx.arc(offset + Pos.x[eid] * size, offset + Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()
 		}
 
@@ -81,7 +80,7 @@ export const game = {
 		ctx.textBaseline = 'bottom'
 		ctx.fillStyle = 'white'
 		ctx.font = '20px Righteous'
-		ctx.fillText("" + Math.round(FPS), size + offset - 5, size + offset - 5)
+		ctx.fillText("" + Math.round(FPS), size - 5, size - 5)
 
 		//
 		// UI
@@ -89,15 +88,15 @@ export const game = {
 
 		// Clip
 		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, offset, height) // left
-		ctx.fillRect(0, 0, width, offset) // top
-		ctx.fillRect(0, height - offset, width, offset) // bottom
-		ctx.fillRect(offset + size, 0, width - offset - size, height) // right
+		if (width > height)
+			ctx.fillRect(size, 0, width - size, height)
+		else
+			ctx.fillRect(0, size, width, height - size)
 
 		// Gamescreen Border
 		ctx.strokeStyle = 'white'
 		ctx.lineWidth = 2
-		ctx.strokeRect(offset, offset, size, size)
+		ctx.strokeRect(0, 0, size, size)
 
 		// Text
 		ctx.fillStyle = 'white'
