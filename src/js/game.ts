@@ -1,13 +1,14 @@
 
 import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
-import { Acc, Bullet, Player, Pos, Size, Vel } from './comps'
+import { Acc, Bullet, Player, Point, Pos, Size, Vel } from './comps'
 import blts from './_bullets'
 import physics from './physics'
 
 export const world = createWorld()
 
 const bullets = defineQuery([Bullet, Pos, Size])
+const points = defineQuery([Point, Pos, Size])
 
 export const game = {
 	init() {
@@ -62,6 +63,15 @@ export const game = {
 		const bullet_array = bullets(world)
 		for (let i = 0; i < bullet_array.length; i++) {
 			let eid = bullet_array[i]
+			ctx.beginPath()
+			ctx.arc(offset + Pos.x[eid] * size, offset + Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+			ctx.fill()
+		}
+
+		ctx.fillStyle = 'blue'
+		const point_array = points(world)
+		for (let i = 0; i < point_array.length; i++) {
+			let eid = point_array[i]
 			ctx.beginPath()
 			ctx.arc(offset + Pos.x[eid] * size, offset + Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()

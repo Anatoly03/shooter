@@ -10,6 +10,7 @@ import { Types, defineComponent } from 'bitecs'
 
 export const Player = defineComponent()
 export const Bullet = defineComponent()
+export const Point = defineComponent()
 
 //
 // Physics and Position

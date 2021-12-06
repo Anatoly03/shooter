@@ -24,7 +24,7 @@ export default [
 			Pos.y[eid] = .5 + Math.cos(i / amount * 2 * Math.PI) * .3
 			Size.r[eid] = .005
 
-			await wait(1000 / amount)
+			await wait(2500 / amount)
 		}
 
 		await wait(100)
@@ -352,7 +352,7 @@ export default [
 
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
-			
+
 			addComponent(world, Bullet, eid)
 			addComponent(world, Gravity, eid)
 			addComponent(world, Pos, eid)

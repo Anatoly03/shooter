@@ -1,12 +1,13 @@
 
-import { defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside } from './comps'
+import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, Pos])
+const points_query = defineQuery([Point, Pos])
 const kill_query = defineQuery([Bullet, KillOutside])
 
 export default pipe(
@@ -81,19 +82,62 @@ export default pipe(
 
 	/**
 	 * 
-	 * › COLLISION DETECTION ‹
+	 * › COLLISION DETECTION: PLAYER - BULLET ‹
 	 *
 	 */
 
 	(world: IWorld) => {
 		const entities = bullets_query(world)
+		let collided = false
 
 		for (let i = 0; i < entities.length; i++) {
 			const eid = entities[i]
 
 			if ((Pos.x[world.pid] - Pos.x[eid]) ** 2 + (Pos.y[world.pid] - Pos.y[eid]) ** 2 < (Size.r[eid] + Size.r[world.pid]) ** 2) {
-				entities.forEach(eid => removeEntity(world, eid))
+				collided = true
 				break
+			}
+		}
+
+		if (collided)
+			entities.forEach(e => {
+				let eid = addEntity(world)
+
+				addComponent(world, Point, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, KillOutside, eid)
+
+				Pos.x[eid] = Pos.x[e]
+				Pos.y[eid] = Pos.y[e]
+
+				Acc.y[eid] = .00005
+
+				Size.r[eid] = .005
+
+				removeEntity(world, e)
+			})
+
+		return world
+	},
+
+
+	/**
+	 * 
+	 * › COLLISION DETECTION: PLAYER - COLLECTABLE POINTS ‹
+	 *
+	 */
+
+	(world: IWorld) => {
+		const entities = points_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			if ((Pos.x[world.pid] - Pos.x[eid]) ** 2 + (Pos.y[world.pid] - Pos.y[eid]) ** 2 < (Size.r[eid] + Size.r[world.pid]) ** 2) {
+				removeEntity(world, eid)
 			}
 		}
 
