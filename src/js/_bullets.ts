@@ -8,7 +8,7 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		const amount = 16
+		const amount = 2 ** Math.floor(Math.random() * 5 + 3)
 
 		let entities = []
 
@@ -24,7 +24,7 @@ export default [
 			Pos.y[eid] = .5 + Math.cos(i / amount * 2 * Math.PI) * .3
 			Size.r[eid] = .005
 
-			await wait(100)
+			await wait(1000 / amount)
 		}
 
 		await wait(100)

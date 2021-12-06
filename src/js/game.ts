@@ -26,8 +26,9 @@ export const game = {
 	},
 
 	async spawn() {
-		//await blts[9](world)
-		await blts[Math.floor(Math.random() * blts.length)](world)
+		let n = 0 // Math.floor(Math.random() * blts.length)
+		console.log(n)
+		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
 		//this.spawn.bind(this)()
 	},

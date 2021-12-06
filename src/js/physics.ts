@@ -18,7 +18,7 @@ export default pipe(
 	 *
 	 */
 
-	 (world: IWorld) => {
+	(world: IWorld) => {
 		const entities = acc_gravity_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
@@ -80,11 +80,32 @@ export default pipe(
 
 	/**
 	 * 
+	 * › COLLISION DETECTION ‹
+	 *
+	 */
+
+	(world: IWorld) => {
+		const entities = bullets_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			if ((Pos.x[world.pid] - Pos.x[eid]) ** 2 + (Pos.y[world.pid] - Pos.y[eid]) ** 2 < (Size.r[eid] + Size.r[world.pid]) ** 2) {
+				entities.forEach(eid => removeEntity(world, eid))
+				break
+			}
+		}
+
+		return world
+	},
+
+	/**
+	 * 
 	 * › REMOVE OUTSIDE BULLETS ‹
 	 *
 	 */
 
-	 (world: IWorld) => {
+	(world: IWorld) => {
 		const entities = bullets_query(world)
 
 		for (let i = 0; i < entities.length; i++) {
