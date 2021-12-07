@@ -1,7 +1,7 @@
 
-import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity } from 'bitecs'
+import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity, hasComponent } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
-import { Acc, Bullet, Player, Point, Pos, Size, Vel } from './comps'
+import { Acc, ActiveBullet, Bullet, Player, Point, Pos, Size, Vel } from './comps'
 import blts from './_bullets'
 import physics from './physics'
 
@@ -27,7 +27,7 @@ export const game = {
 	},
 
 	async spawn() {
-		let n = 10 //Math.floor(Math.random() * blts.length)
+		let n = 3 // Math.floor(Math.random() * blts.length) // 10
 		//console.log(n)
 		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
@@ -53,11 +53,6 @@ export const game = {
 
 		// Game Content
 
-		ctx.fillStyle = 'green'
-		ctx.beginPath()
-		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
-		ctx.fill()
-
 		ctx.fillStyle = '#05052f'
 		const point_array = points(world)
 		for (let i = 0; i < point_array.length; i++) {
@@ -67,14 +62,24 @@ export const game = {
 			ctx.fill()
 		}
 
-		ctx.fillStyle = 'red'
 		const bullet_array = bullets(world)
 		for (let i = 0; i < bullet_array.length; i++) {
 			let eid = bullet_array[i]
+
+			if (hasComponent(world, ActiveBullet, eid))
+				ctx.fillStyle = '#ff0000'
+			else
+				ctx.fillStyle = '#3f0000'
+
 			ctx.beginPath()
 			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()
 		}
+
+		ctx.fillStyle = 'green'
+		ctx.beginPath()
+		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
+		ctx.fill()
 
 		ctx.textAlign = 'right'
 		ctx.textBaseline = 'bottom'
