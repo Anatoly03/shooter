@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld } from "bitecs";
-import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, Player, Pos, Size, Vel } from './comps'
+import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Size, Vel } from './comps'
 
 export default [
 
@@ -383,6 +383,49 @@ export default [
 		}
 
 		await wait(500)
+
+		return world
+	},
+
+	/*
+	 * FIRE HALF RING HUGE
+	 */
+
+	async (world: IWorld) => {
+		let amount = 35
+
+		let entities = []
+
+		for (let wave = 0; wave < 20; wave++) {
+			for (let i = 0; i < amount * 3; i++) {
+				let eid = addEntity(world)
+				entities.push(eid)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, KillOutside, eid)
+
+				Pos.x[eid] = .5
+				Pos.y[eid] = -.05
+				Size.r[eid] = .01
+
+				addComponent(world, Vel, eid)
+				addComponent(world, LimesVel, eid)
+				addComponent(world, ActiveBullet, eid)
+
+				Vel.x[eid] = Math.cos((i + wave % 2 * .5) / amount * Math.PI) * .01
+				Vel.y[eid] = Math.sin((i + wave % 2 * .5) / amount * Math.PI) * .01
+
+				LimesVel.x[eid] = Math.cos((i + wave % 2 * .5) / amount * Math.PI) * .0001
+				LimesVel.y[eid] = Math.sin((i + wave % 2 * .5) / amount * Math.PI) * .0001
+				LimesVel.f[eid] = .005
+			}
+
+			await wait(200)
+		}
+
+		await wait(1000)
 
 		return world
 	},

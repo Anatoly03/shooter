@@ -37,6 +37,12 @@ export const Acc = defineComponent({
 	y: Types.f64,
 })
 
+export const LimesVel = defineComponent({
+	x: Types.f64,
+	y: Types.f64,
+	f: Types.f64, // factor
+})
+
 export const Size = defineComponent({
 	r: Types.f64,
 })

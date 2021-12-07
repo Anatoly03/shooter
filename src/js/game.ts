@@ -27,7 +27,7 @@ export const game = {
 	},
 
 	async spawn() {
-		let n = Math.floor(Math.random() * blts.length)
+		let n = 10 //Math.floor(Math.random() * blts.length)
 		//console.log(n)
 		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))

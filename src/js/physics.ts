@@ -1,10 +1,11 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
+const limes_vel_query = defineQuery([Vel, LimesVel])
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, ActiveBullet, Pos])
 const points_query = defineQuery([Point, Pos])
@@ -54,6 +55,30 @@ export default pipe(
 
 			Vel.x[eid] += Acc.x[eid]
 			Vel.y[eid] += Acc.y[eid]
+		}
+
+		return world
+	},
+
+	/**
+	 * 
+	 * › APPROACH VELOCITY ‹
+	 * 
+	 * Vel <- ToVel
+	 *
+	 */
+
+	(world: IWorld) => {
+		const entities = limes_vel_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			//let speed = Math.abs(Math.floor((Math.atan2(Vel.x[eid], Vel.y[eid]) * 180 / Math.PI) % 90)) / 90
+			//console.log(speed)
+
+			Vel.x[eid] += /*Math.sign*/ (LimesVel.x[eid] - Vel.x[eid]) * LimesVel.f[eid] // speed
+			Vel.y[eid] += /*Math.sign*/ (LimesVel.y[eid] - Vel.y[eid]) * LimesVel.f[eid] // speed
 		}
 
 		return world
