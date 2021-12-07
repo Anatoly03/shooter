@@ -8,7 +8,7 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		const amount = 2 ** Math.floor(Math.random() * 5 + 3)
+		const amount = 2 ** Math.floor(Math.random() * 3 + 3)
 
 		let entities = []
 
@@ -164,6 +164,7 @@ export default [
 				setTimeout(() => {
 					addComponent(world, Vel, eid)
 					addComponent(world, Acc, eid)
+					addComponent(world, ActiveBullet, eid)
 					//addComponent(world, ActiveBullet, eid)
 
 					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % m + 1) / amount //(Math.random() - .5) * .00001
@@ -226,7 +227,6 @@ export default [
 
 	async (world: IWorld) => {
 		let amount = 50
-		let radius = .05
 
 		let entities = []
 
@@ -341,7 +341,8 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let amount = Math.random() * 20 + 180
+		// LUNATIC!
+		let amount = Math.random() * 700 + 50
 		let length = 10
 
 		for (let i = 0; i < amount; i++) {
@@ -355,6 +356,7 @@ export default [
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
 				addComponent(world, KillOutside, eid)
 
 				Pos.x[eid] = x
@@ -362,7 +364,7 @@ export default [
 				Size.r[eid] = .005
 
 				Vel.y[eid] = .01
-
+				Acc.y[eid] = .000001 * i
 			}
 
 			await wait(Math.random() * 100)

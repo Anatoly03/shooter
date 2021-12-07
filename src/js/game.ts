@@ -19,7 +19,7 @@ export const game = {
 		addComponent(world, Vel, world.pid)
 
 		Pos.x[world.pid] = .5
-		Pos.y[world.pid] = .5
+		Pos.y[world.pid] = .8
 
 		Size.r[world.pid] = .005
 
@@ -27,8 +27,8 @@ export const game = {
 	},
 
 	async spawn() {
-		let n = Math.floor(Math.random() * blts.length) // 10
-		//console.log(n)
+		let n = 8 // Math.floor(Math.random() * blts.length) // 10
+		console.log(n)
 		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
 		//this.spawn.bind(this)()
