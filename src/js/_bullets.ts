@@ -117,17 +117,38 @@ export default [
 	},
 
 	/*
-	 * FIRE RING
+	 * GALAXY
 	 */
 
 	async (world: IWorld) => {
-		let amount = 100
+		let amount = 500
+		let circles = 3
 		let radius = .5
-		let decreasingRadius = true
+		let spirals = 2 // 10
+		let radiusReduce = .99 + Math.random() * .009 //(.99 + Math.random() * .009) ** spirals // UNCOMMENT FOR MORE PINCH
 
-		for (let j = 0; j < amount * 2; j++) {
-			for (let i of [j, j + amount * .5]) {
+		let m = 0
+		let mM = 1
+
+		for (let j = 0; j < amount * circles; j++) {
+			if (j%amount == 0) {
+				m = 0
+		     	mM = 1
+			}
+
+			let a = []
+
+			for (let i = 0; i < spirals; i++) {
+				a.push(j + amount * i / spirals)
+			}
+
+			for (let i of a) {
 				let eid = addEntity(world)
+				m += 1
+				if (m > mM) {
+					m = 0
+					mM += 1
+				}
 
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
@@ -143,18 +164,18 @@ export default [
 				setTimeout(() => {
 					addComponent(world, Vel, eid)
 					addComponent(world, Acc, eid)
-					addComponent(world, ActiveBullet, eid)
+					//addComponent(world, ActiveBullet, eid)
 
-					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
-					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
+					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % m + 1) / amount //(Math.random() - .5) * .00001
+					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % m + 1) / amount //(Math.random() - .5) * .00001
 
-					Acc.x[eid] = Math.cos(i / amount * 2 * Math.PI) * .00001 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
-					Acc.y[eid] = - Math.sin(i / amount * 2 * Math.PI) * .00001 * (j % 5 + 1) / amount //(Math.random() - .5) * .00001
-				}, 1000)
+					Acc.x[eid] = Math.cos(i / amount * 2 * Math.PI) * .001 * (j % m + 1) / amount //(Math.random() - .5) * .00001
+					Acc.y[eid] = - Math.sin(i / amount * 2 * Math.PI) * .001 * (j % m + 1) / amount //(Math.random() - .5) * .00001
+				}, 100 * m)
 			}
 
-			if (decreasingRadius)
-				radius *= .995
+			radius *= radiusReduce
+			//radius *= (j < amount * circles / 3) ? .99 : 1.01
 		}
 
 		await wait(17000)
@@ -396,7 +417,7 @@ export default [
 
 		let entities = []
 
-		for (let wave = 0; wave < 20; wave++) {
+		for (let wave = 0; wave < 10; wave++) {
 			for (let i = 0; i < amount * 3; i++) {
 				let eid = addEntity(world)
 				entities.push(eid)
