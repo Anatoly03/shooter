@@ -124,8 +124,8 @@ export default [
 		let amount = 500
 		let circles = 3
 		let radius = .5
-		let spirals = 2 // 10
-		let radiusReduce = .99 + Math.random() * .009 //(.99 + Math.random() * .009) ** spirals // UNCOMMENT FOR MORE PINCH
+		let spirals = Math.ceil(Math.random() * 10) + 1
+		let radiusReduce = .99 + Math.random() * .009 - .001 * spirals //(.99 + Math.random() * .009) ** spirals // UNCOMMENT FOR MORE PINCH
 
 		let m = 0
 		let mM = 1
