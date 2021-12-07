@@ -1,5 +1,5 @@
-import { addComponent, addEntity, IWorld } from "bitecs";
-import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Size, Vel } from './comps'
+import { addComponent, addEntity, IWorld, removeComponent } from "bitecs";
+import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Size, Vel, Vibration } from './comps'
 
 export default [
 
@@ -477,13 +477,17 @@ export default [
 					addComponent(world, Bullet, eid)
 					addComponent(world, Pos, eid)
 					addComponent(world, Size, eid)
+					addComponent(world, Vel, eid)
 					addComponent(world, KillOutside, eid)
+					addComponent(world, Vibration, eid)
 
 					let angle = Math.random() * Math.PI * 2
 
 					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
 					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius
 					Size.r[eid] = .01
+					
+					Vibration.f[eid] = .001
 
 					radius += (maxRadius - radius) / amount
 
@@ -492,8 +496,8 @@ export default [
 					}, 25 * amount)
 
 					setTimeout(() => {
-						addComponent(world, Vel, eid)
 						addComponent(world, Acc, eid)
+						removeComponent(world, Vibration, eid)
 			
 						// FACTOR .00005 = IS MEDIUM OR HARD SPEED
 						Acc.x[eid] = (Math.random() - .5) * .000025

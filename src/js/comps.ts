@@ -52,6 +52,12 @@ export const Gravity = defineComponent({
 	force: Types.f64,
 })
 
+export const Vibration = defineComponent({
+	f: Types.f64,
+	ix: Types.f64,
+	iy: Types.f64,
+})
+
 //
 // Lifetime
 //

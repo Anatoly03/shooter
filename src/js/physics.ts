@@ -1,11 +1,12 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const limes_vel_query = defineQuery([Vel, LimesVel])
+const vibration_query = defineQuery([Pos, Vibration]) // Vel?
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, ActiveBullet, Pos])
 const points_query = defineQuery([Point, Pos])
@@ -79,6 +80,32 @@ export default pipe(
 
 			Vel.x[eid] += /*Math.sign*/ (LimesVel.x[eid] - Vel.x[eid]) * LimesVel.f[eid] // speed
 			Vel.y[eid] += /*Math.sign*/ (LimesVel.y[eid] - Vel.y[eid]) * LimesVel.f[eid] // speed
+		}
+
+		return world
+	},
+
+	/**
+	 * 
+	 * › VIBRATION ‹
+	 *
+	 */
+
+	 (world: IWorld) => {
+		const entities = vibration_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			Vibration.ix[eid] = (Math.random() - .5) * Vibration.f[eid]
+			Vibration.iy[eid] = (Math.random() - .5) * Vibration.f[eid]
+
+			//Vibration.ix[eid] **= 3
+			//Vibration.iy[eid] **= 3
+
+			// Velocity?
+			Pos.x[eid] += Vibration.ix[eid] //Vibration.f[eid] * Math.sin(Vibration.ix[eid] / Math.PI * 2)
+			Pos.y[eid] += Vibration.iy[eid] // ibration.f[eid] * Math.cos(Vibration.iy[eid] / Math.PI * 2)
 		}
 
 		return world
