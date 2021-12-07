@@ -388,11 +388,11 @@ export default [
 	},
 
 	/*
-	 * FIRE HALF RING HUGE
+	 * HALF RING HUGE (VARIANT WITHOUT FREE LINES)
 	 */
 
 	async (world: IWorld) => {
-		let amount = 35
+		let amount = 50
 
 		let entities = []
 

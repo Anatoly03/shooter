@@ -58,7 +58,7 @@ export const game = {
 		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 		ctx.fill()
 
-		ctx.fillStyle = 'blue'
+		ctx.fillStyle = '#05052f'
 		const point_array = points(world)
 		for (let i = 0; i < point_array.length; i++) {
 			let eid = point_array[i]
