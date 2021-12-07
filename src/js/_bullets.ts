@@ -454,7 +454,7 @@ export default [
 	},
 
 	/*
-	 * FILLING BULLETS
+	 * FILLING BULLETS (LUNATIC)
 	 * 
 	 * Fill the land with bullets that are only vibrating and then slowly sets them in random motion when everything is filled.
 	 */
@@ -486,7 +486,7 @@ export default [
 					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
 					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius
 					Size.r[eid] = .01
-					
+
 					Vibration.f[eid] = .001
 
 					radius += (maxRadius - radius) / amount
@@ -498,7 +498,7 @@ export default [
 					setTimeout(() => {
 						addComponent(world, Acc, eid)
 						removeComponent(world, Vibration, eid)
-			
+
 						// FACTOR .00005 = IS MEDIUM OR HARD SPEED
 						Acc.x[eid] = (Math.random() - .5) * .000025
 						Acc.y[eid] = (Math.random() - .5) * .000025
@@ -511,6 +511,52 @@ export default [
 		}
 
 		await wait(50 * amount / 3 + 25000)
+
+		return world
+	},
+
+	/*
+	 * JUNKO ON STEROIDS LuaSTG
+	 */
+
+	async (world: IWorld) => {
+		let shoots = 5
+
+		for (let i = 0; i < shoots; i++) {
+			let amount = 10
+			let radius = .1
+
+			for (let i = 0; i < amount; i++) {
+				let eid = addEntity(world)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, Gravity, eid)
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+				addComponent(world, ActiveBullet, eid)
+
+				Pos.x[eid] = Pos.x[world.pid] + Math.sin(i / amount * Math.PI * 2) * radius
+				Pos.y[eid] = Pos.y[world.pid] + Math.cos(i / amount * Math.PI * 2) * radius
+				Size.r[eid] = .01
+
+				Gravity.eid[eid] = world.pid
+				Gravity.force[eid] = .00001
+
+				Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .001
+				Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .001
+
+				Acc.x[eid] = Math.sin(i / amount * Math.PI * 2) * .000001
+				Acc.y[eid] = Math.cos(i / amount * Math.PI * 2) * .000001
+
+				setTimeout(() => {
+					addComponent(world, KillOutside, eid)
+				}, 2000);
+			}
+
+			await wait(2000)
+		}
 
 		return world
 	},
