@@ -58,19 +58,19 @@ export const game = {
 		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 		ctx.fill()
 
-		ctx.fillStyle = 'red'
-		const bullet_array = bullets(world)
-		for (let i = 0; i < bullet_array.length; i++) {
-			let eid = bullet_array[i]
+		ctx.fillStyle = 'blue'
+		const point_array = points(world)
+		for (let i = 0; i < point_array.length; i++) {
+			let eid = point_array[i]
 			ctx.beginPath()
 			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()
 		}
 
-		ctx.fillStyle = 'blue'
-		const point_array = points(world)
-		for (let i = 0; i < point_array.length; i++) {
-			let eid = point_array[i]
+		ctx.fillStyle = 'red'
+		const bullet_array = bullets(world)
+		for (let i = 0; i < bullet_array.length; i++) {
+			let eid = bullet_array[i]
 			ctx.beginPath()
 			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
 			ctx.fill()
