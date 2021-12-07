@@ -131,9 +131,9 @@ export default [
 		let mM = 1
 
 		for (let j = 0; j < amount * circles; j++) {
-			if (j%amount == 0) {
+			if (j % amount == 0) {
 				m = 0
-		     	mM = 1
+				mM = 1
 			}
 
 			let a = []
@@ -453,10 +453,72 @@ export default [
 		return world
 	},
 
+	/*
+	 * FILLING BULLETS
+	 * 
+	 * Fill the land with bullets that are only vibrating and then slowly sets them in random motion when everything is filled.
+	 */
+
+	async (world: IWorld) => {
+		// 100 IS MEDIUM OR HARD
+		let amount = 100
+
+		let entities: number[] = []
+
+		for (let corner = 0; corner < 4; corner++) {
+			go(async () => {
+				let radius = .03
+				// .65 ALSO POSSIBLE
+				let maxRadius = .65
+				for (let i = 0; i < amount * 3; i++) {
+					let eid = addEntity(world)
+					entities.push(eid)
+
+					addComponent(world, Bullet, eid)
+					addComponent(world, Pos, eid)
+					addComponent(world, Size, eid)
+					addComponent(world, KillOutside, eid)
+
+					let angle = Math.random() * Math.PI * 2
+
+					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
+					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius
+					Size.r[eid] = .01
+
+					radius += (maxRadius - radius) / amount
+
+					setTimeout(() => {
+						addComponent(world, ActiveBullet, eid)
+					}, 25 * amount)
+
+					setTimeout(() => {
+						addComponent(world, Vel, eid)
+						addComponent(world, Acc, eid)
+			
+						// FACTOR .00005 = IS MEDIUM OR HARD SPEED
+						Acc.x[eid] = (Math.random() - .5) * .000025
+						Acc.y[eid] = (Math.random() - .5) * .000025
+					}, 25 * amount + 2000)
+
+					if (i % 3 == 0)
+						await wait(50)
+				}
+			})
+		}
+
+		await wait(50 * amount / 3 + 25000)
+
+		return world
+	},
+
 ]
 
 async function wait(ms: number) {
 	return new Promise(resolve => {
 		setTimeout(resolve, ms)
 	})
+}
+
+async function go(f: () => void) {
+	f()
 }
