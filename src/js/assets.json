@@ -1,7 +1,13 @@
 [{
-    "d": [1, 290, 32, 32],
-    "name": "circle-black"
-}, {
-    "d": [33, 290, 33, 322],
-    "name": "circle-red"
-}]
+        "d": [1, 49, 16, 16],
+        "name": "small-circle-black"
+    },
+
+    {
+        "d": [1, 290, 32, 32],
+        "name": "circle-black"
+    }, {
+        "d": [33, 290, 33, 322],
+        "name": "circle-red"
+    }
+]

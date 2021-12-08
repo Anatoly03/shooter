@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld, removeComponent } from "bitecs";
-import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Rotation, Size, Vel, Vibration } from './comps'
+import { Acc, ActiveBullet, Asset, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Rotation, Size, Vel, Vibration } from './comps'
 
 export default [
 
@@ -474,6 +474,7 @@ export default [
 					let eid = addEntity(world)
 					entities.push(eid)
 
+					addComponent(world, Asset, eid)
 					addComponent(world, Bullet, eid)
 					addComponent(world, Pos, eid)
 					addComponent(world, Size, eid)
@@ -482,6 +483,8 @@ export default [
 					addComponent(world, Vibration, eid)
 
 					let angle = Math.random() * Math.PI * 2
+
+					Asset.id[eid] = 1
 
 					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
 					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius

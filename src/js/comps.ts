@@ -8,6 +8,18 @@ import { Types, defineComponent } from 'bitecs'
  *
  */
 
+//
+// Assets
+//
+
+export const Asset = defineComponent({
+	id: Types.ui16,
+})
+
+//
+// 
+//
+
 export const Player = defineComponent()
 export const Point = defineComponent()
 

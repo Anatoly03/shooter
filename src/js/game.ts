@@ -1,17 +1,26 @@
 
 import { createWorld, addEntity, addComponent, pipe, defineQuery, removeEntity, hasComponent } from 'bitecs'
 import { ctx, width, height, keys, DEBUG_MODE, FPS } from "./app"
-import { Acc, ActiveBullet, Bullet, Player, Point, Pos, Size, Vel } from './comps'
+import { Acc, ActiveBullet, Asset, Bullet, Player, Point, Pos, Size, Vel } from './comps'
 import blts from './_bullets'
 import physics from './physics'
 
+import config from './assets.json'
+
 export const world = createWorld()
 
+let debug_mode = true
+
+const assets = defineQuery([Asset])
 const bullets = defineQuery([Bullet, Pos, Size])
 const points = defineQuery([Point, Pos, Size])
 
 export const game = {
+	img: new Image(),
+
 	init() {
+		this.img.src = `assets/touhou.png`
+
 		world.pid = addEntity(world)
 		addComponent(world, Player, world.pid)
 		addComponent(world, Pos, world.pid)
@@ -27,9 +36,9 @@ export const game = {
 	},
 
 	async spawn() {
-		//let n = Math.floor(Math.random() * blts.length) // 13
-		//console.log(n)
-		//await blts[n](world)
+		let n = 11 // Math.floor(Math.random() * blts.length) // 13
+		console.log(n)
+		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
 		//this.spawn.bind(this)()
 	},
@@ -53,33 +62,49 @@ export const game = {
 
 		// Game Content
 
-		ctx.fillStyle = '#05052f'
-		const point_array = points(world)
-		for (let i = 0; i < point_array.length; i++) {
-			let eid = point_array[i]
+		if (debug_mode) {
+			ctx.fillStyle = '#05052f'
+			const point_array = points(world)
+			for (let i = 0; i < point_array.length; i++) {
+				let eid = point_array[i]
+				ctx.beginPath()
+				ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+				ctx.fill()
+			}
+
+			const bullet_array = bullets(world)
+			for (let i = 0; i < bullet_array.length; i++) {
+				let eid = bullet_array[i]
+
+				if (hasComponent(world, ActiveBullet, eid))
+					ctx.fillStyle = '#ff0000'
+				else
+					ctx.fillStyle = '#3f0000'
+
+				ctx.beginPath()
+				ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+				ctx.fill()
+			}
+
+			ctx.fillStyle = 'green'
 			ctx.beginPath()
-			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
+			ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 			ctx.fill()
 		}
 
-		const bullet_array = bullets(world)
-		for (let i = 0; i < bullet_array.length; i++) {
-			let eid = bullet_array[i]
+		let a = assets(world)
+		ctx.globalAlpha = 0.5
+		for (let i = 0; i < a.length; i++) {
+			let eid = a[i]
+			if (Asset.id[eid] == 0) continue
+			let data = config[Asset.id[eid] - 1]
 
-			if (hasComponent(world, ActiveBullet, eid))
-				ctx.fillStyle = '#ff0000'
-			else
-				ctx.fillStyle = '#3f0000'
+			let x = Pos.x[eid] - Size.r[eid]
+			let y = Pos.y[eid] - Size.r[eid]
 
-			ctx.beginPath()
-			ctx.arc(Pos.x[eid] * size, Pos.y[eid] * size, Size.r[eid] * size, 0, 2 * Math.PI)
-			ctx.fill()
+			ctx.drawImage(this.img, data.d[0], data.d[1], data.d[2], data.d[3], x * size, y * size, data.d[2], data.d[3])
 		}
-
-		ctx.fillStyle = 'green'
-		ctx.beginPath()
-		ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
-		ctx.fill()
+		ctx.globalAlpha = 1
 
 		ctx.textAlign = 'right'
 		ctx.textBaseline = 'bottom'
@@ -112,7 +137,7 @@ export const game = {
 	},
 
 	onKeyDown(event: KeyboardEvent) {
-		//
+		if (event.key == 'F3') debug_mode = !debug_mode
 	},
 
 	onClick(event: MouseEvent) {
