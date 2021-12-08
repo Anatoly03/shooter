@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld, removeComponent } from "bitecs";
-import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Size, Vel, Vibration } from './comps'
+import { Acc, ActiveBullet, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Rotation, Size, Vel, Vibration } from './comps'
 
 export default [
 
@@ -564,6 +564,58 @@ export default [
 
 			await wait(2000)
 		}
+
+		return world
+	},
+
+	/*
+	 * SOME WEIRDNESS WITH WEIRD BEHAVIOR
+	 */
+
+	async (world: IWorld) => {
+		let shoots = 5 + Math.random() * 10
+		let entities = []
+
+		for (let i = 0; i < shoots; i++) {
+			let amount = 50
+			let radius = Math.random() + 1.2
+
+			let centerX = Math.random()
+			let centerY = Math.random()
+
+			for (let j = 0; j < amount; j++) {
+				let eid = addEntity(world)
+				entities.push(eid)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, Vel, eid)
+				addComponent(world, ActiveBullet, eid)
+				addComponent(world, Rotation, eid)
+
+				Rotation.eid[eid] = world.pid
+				Rotation.angle[eid] = .05
+
+				Pos.x[eid] = centerX + Math.sin(j / amount * Math.PI * 2) * radius
+				Pos.y[eid] = centerY + Math.cos(j / amount * Math.PI * 2) * radius
+				Size.r[eid] = .01
+
+				//Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .001
+				//Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .001
+
+				setTimeout(() => {
+					addComponent(world, KillOutside, eid)
+				}, 4000)
+			}
+
+			await wait(200)
+		}
+
+		//await wait(200)
+		//entities.forEach(eid => addComponent(world, ActiveBullet, eid))
+
+		await wait(10000)
 
 		return world
 	},

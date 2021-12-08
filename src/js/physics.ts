@@ -1,11 +1,12 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration, Rotation } from './comps'
 
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
 const limes_vel_query = defineQuery([Vel, LimesVel])
+const rotation_query = defineQuery([Pos, Rotation])
 const vibration_query = defineQuery([Pos, Vibration]) // Vel?
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, ActiveBullet, Pos])
@@ -87,11 +88,45 @@ export default pipe(
 
 	/**
 	 * 
+	 * › ROTATION ‹
+	 *
+	 */
+
+	(world: IWorld) => {
+		const entities = rotation_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			let xDif = Pos.x[Rotation.eid[eid]] - Pos.x[eid]
+			let yDif = Pos.y[Rotation.eid[eid]] - Pos.y[eid]
+			let dist = xDif ** 2 + yDif ** 2
+
+			let angle = Math.atan2(xDif, yDif) + Math.PI * .45
+
+			let newX = dist * Math.sin(angle)
+			let newY = dist * Math.cos(angle)
+
+			Pos.x[eid] += newX * Rotation.angle[eid] //Math.sin(angle) * Rotation.angle[eid]
+			Pos.y[eid] += newY * Rotation.angle[eid] //Math.cos(angle) * Rotation.angle[eid]
+
+			//Pos.x[eid] += Math.sin(angle) * Rotation.rMod[eid]
+			//Pos.y[eid] += Math.cos(angle) * Rotation.rMod[eid]
+			
+			//Rotation.angle[eid] 
+			//Vel.y[eid] += Rotation.angle[eid] 
+		}
+
+		return world
+	},
+
+	/**
+	 * 
 	 * › VIBRATION ‹
 	 *
 	 */
 
-	 (world: IWorld) => {
+	(world: IWorld) => {
 		const entities = vibration_query(world)
 
 		for (let i = 0; i < entities.length; i++) {

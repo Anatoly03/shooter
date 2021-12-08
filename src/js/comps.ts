@@ -58,6 +58,12 @@ export const Vibration = defineComponent({
 	iy: Types.f64,
 })
 
+export const Rotation = defineComponent({
+	eid: Types.ui32,
+	angle: Types.f64,
+	//rMod: Types.f64,
+})
+
 //
 // Lifetime
 //
