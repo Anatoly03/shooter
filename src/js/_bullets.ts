@@ -117,7 +117,7 @@ export default [
 	},
 
 	/*
-	 * GALAXY
+	 * GALAXY (TOO LONG)
 	 */
 
 	async (world: IWorld) => {
