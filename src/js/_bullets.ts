@@ -524,7 +524,7 @@ export default [
 
 		for (let i = 0; i < shoots; i++) {
 			let amount = 10
-			let radius = .1
+			let radius = .2
 
 			for (let i = 0; i < amount; i++) {
 				let eid = addEntity(world)
@@ -532,7 +532,7 @@ export default [
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
-				addComponent(world, Gravity, eid)
+				//addComponent(world, Gravity, eid)
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
 				addComponent(world, ActiveBullet, eid)
@@ -541,18 +541,25 @@ export default [
 				Pos.y[eid] = Pos.y[world.pid] + Math.cos(i / amount * Math.PI * 2) * radius
 				Size.r[eid] = .01
 
-				Gravity.eid[eid] = world.pid
-				Gravity.force[eid] = .00001
 
-				Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .001
-				Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .001
 
-				Acc.x[eid] = Math.sin(i / amount * Math.PI * 2) * .000001
-				Acc.y[eid] = Math.cos(i / amount * Math.PI * 2) * .000001
+				Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .002
+				Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .002
+
+				Acc.x[eid] = - Math.sin(i / amount * Math.PI * 2) * .00005
+				Acc.y[eid] = - Math.cos(i / amount * Math.PI * 2) * .00005
+
+				setTimeout(() => {
+					Acc.x[eid] = Math.sin(Math.atan2(Pos.x[world.pid] - Pos.x[eid], Pos.y[world.pid] - Pos.y[eid])) * .0001
+					Acc.y[eid] = Math.cos(Math.atan2(Pos.x[world.pid] - Pos.x[eid], Pos.y[world.pid] - Pos.y[eid])) * .0001
+
+					//Gravity.eid[eid] = world.pid
+					//Gravity.force[eid] = .00001
+				}, 1000);
 
 				setTimeout(() => {
 					addComponent(world, KillOutside, eid)
-				}, 2000);
+				}, 2000)
 			}
 
 			await wait(2000)
