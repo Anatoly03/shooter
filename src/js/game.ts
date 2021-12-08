@@ -102,7 +102,12 @@ export const game = {
 			let x = Pos.x[eid] - Size.r[eid]
 			let y = Pos.y[eid] - Size.r[eid]
 
-			ctx.drawImage(this.img, data.d[0], data.d[1], data.d[2], data.d[3], x * size, y * size, data.d[2], data.d[3])
+			ctx.drawImage(this.img,
+				data.d[0], data.d[1], data.d[2], data.d[3],
+				x * size, y * size,
+				//Math.floor(5 * Size.r[world.pid] * size), Math.floor(5 * Size.r[world.pid] * size)
+				data.d[2], data.d[3]
+			)
 		}
 		ctx.globalAlpha = 1
 

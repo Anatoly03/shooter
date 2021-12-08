@@ -1,7 +1,7 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration, Rotation } from './comps'
-
+import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration, Rotation, Asset } from './comps'
+import { assignAsset } from './asset'
 
 const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
 const vel_query = defineQuery([Vel, Acc])
@@ -197,12 +197,14 @@ export default pipe(
 				addComponent(world, Size, eid)
 				addComponent(world, KillOutside, eid)
 
+				assignAsset(world, 'point', eid)
+
 				Pos.x[eid] = Pos.x[e]
 				Pos.y[eid] = Pos.y[e]
 
 				Acc.y[eid] = .00005
 
-				Size.r[eid] = .005
+				Size.r[eid] = .01
 
 				removeEntity(world, e)
 			})

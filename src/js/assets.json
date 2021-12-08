@@ -1,13 +1,20 @@
-[{
+[
+
+    {
+        "d": [260, 356, 12, 12],
+        "id": "point"
+    },
+
+    {
         "d": [1, 49, 16, 16],
-        "name": "small-circle-black"
+        "id": "small-circle-black"
     },
 
     {
         "d": [1, 290, 32, 32],
-        "name": "circle-black"
+        "id": "circle-black"
     }, {
         "d": [33, 290, 33, 322],
-        "name": "circle-red"
+        "id": "circle-red"
     }
 ]
