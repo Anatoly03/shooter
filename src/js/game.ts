@@ -56,10 +56,6 @@ export const game = {
 	render() {
 		let size = Math.min(width, height)
 
-		// Background
-		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, width, height)
-
 		// Game Content
 
 		if (debug_mode) {
