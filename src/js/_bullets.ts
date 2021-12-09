@@ -51,7 +51,7 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let amount = Math.random() * 500
+		let amount = Math.random() * 200
 
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
@@ -63,15 +63,17 @@ export default [
 			addComponent(world, Acc, eid)
 			addComponent(world, KillOutside, eid)
 
+			assignAsset(world, 'small-black', eid)
+
 			Pos.x[eid] = Math.random()
 			Pos.y[eid] = 0
 
-			Acc.x[eid] = (Math.random() - .5) * .0001
+			Acc.x[eid] = (Math.random() - .5) * .00005
 			Acc.y[eid] = Math.random() * .00005
 
-			Size.r[eid] = .005
+			Size.r[eid] = .01
 
-			await wait(Math.random() * 30)
+			await wait(50)
 		}
 
 		await wait(500)
@@ -95,6 +97,8 @@ export default [
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
 			addComponent(world, KillOutside, eid)
+
+			assignAsset(world, 'small-black', eid)
 
 			if (Math.random() > .5) {
 				Pos.x[eid] = Math.random()
@@ -325,6 +329,8 @@ export default [
 				addComponent(world, Vel, eid)
 				addComponent(world, KillOutside, eid)
 
+				assignAsset(world, 'small-black', eid)
+
 				Pos.x[eid] = x
 				Size.r[eid] = .005
 
@@ -361,6 +367,8 @@ export default [
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
 				addComponent(world, KillOutside, eid)
+
+				assignAsset(world, 'small-black', eid)
 
 				Pos.x[eid] = x
 				Pos.y[eid] = - j * .01
@@ -431,6 +439,8 @@ export default [
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, KillOutside, eid)
+
+				assignAsset(world, 'small-black', eid)
 
 				Pos.x[eid] = .5
 				Pos.y[eid] = -.05
@@ -546,7 +556,7 @@ export default [
 				Pos.y[eid] = Pos.y[world.pid] + Math.cos(i / amount * Math.PI * 2) * radius
 				Size.r[eid] = .01
 
-
+				assignAsset(world, 'small-black', eid)
 
 				Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .002
 				Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .002

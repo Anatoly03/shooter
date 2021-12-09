@@ -197,7 +197,7 @@ export default pipe(
 				addComponent(world, Size, eid)
 				addComponent(world, KillOutside, eid)
 
-				assignAsset(world, 'point', eid)
+				assignAsset(world, 'bullet-point', eid)
 
 				Pos.x[eid] = Pos.x[e]
 				Pos.y[eid] = Pos.y[e]
