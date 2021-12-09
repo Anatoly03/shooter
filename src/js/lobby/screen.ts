@@ -37,16 +37,19 @@ export default {
 	onKeyDown(event: KeyboardEvent) {
 		switch (event.key.toLowerCase()) {
 			case 'arrowdown':
+			case 's':
 				if (this.selected == this.buttons.length - 1) this.selected = 0
 				else this.selected++
 				break
 
 			case 'arrowup':
+			case 'w':
 				if (this.selected == 0) this.selected = this.buttons.length - 1
 				else this.selected--
 				break
 
 			case 'arrowright':
+			case 'd':
 				// enter playing room
 				break
 		}
