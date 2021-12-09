@@ -1,6 +1,6 @@
 
 //import { game } from './game'
-import lobby from './lobby/screen'
+import lobby from './screens/start'
 
 export let DEBUG_MODE: boolean
 
