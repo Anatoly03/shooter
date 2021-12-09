@@ -7,7 +7,12 @@
 
     {
         "d": [1, 49, 16, 16],
-        "id": "small-circle-black"
+        "id": "small-black"
+    },
+
+    {
+        "d": [65, 450, 64, 64],
+        "id": "huge-blue"
     },
 
     {

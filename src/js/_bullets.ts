@@ -278,9 +278,11 @@ export default [
 			addComponent(world, Size, eid)
 			addComponent(world, KillOutside, eid)
 
+			assignAsset(world, 'huge-blue', eid)
+
 			Pos.x[eid] = .5
 			Pos.y[eid] = -.05
-			Size.r[eid] = .05
+			Size.r[eid] = .03
 
 			setTimeout(() => {
 				addComponent(world, Vel, eid)
@@ -484,7 +486,7 @@ export default [
 
 					let angle = Math.random() * Math.PI * 2
 
-					assignAsset(world, 'small-circle-black', eid)
+					assignAsset(world, 'small-black', eid)
 
 					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
 					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius

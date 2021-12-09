@@ -36,7 +36,7 @@ export const game = {
 	},
 
 	async spawn() {
-		let n = 11 // Math.floor(Math.random() * blts.length) // 13
+		let n = 6 // Math.floor(Math.random() * blts.length) // 13
 		console.log(n)
 		await blts[n](world)
 		requestAnimationFrame(this.spawn.bind(this))
@@ -90,25 +90,26 @@ export const game = {
 			ctx.beginPath()
 			ctx.arc(Pos.x[world.pid] * size, Pos.y[world.pid] * size, Size.r[world.pid] * size, 0, 2 * Math.PI)
 			ctx.fill()
+
+			// Draw assets (BELOW) only of half transparency
+			ctx.globalAlpha = 0.5
 		}
 
 		let a = assets(world)
-		ctx.globalAlpha = 0.5
 		for (let i = 0; i < a.length; i++) {
 			let eid = a[i]
 			if (Asset.id[eid] == 0) continue
 			let data = config[Asset.id[eid] - 1]
 
-			let x = Pos.x[eid] - Size.r[eid]
-			let y = Pos.y[eid] - Size.r[eid]
+			let x = Pos.x[eid] * size - data.d[2] * .5
+			let y = Pos.y[eid] * size - data.d[3] * .5
 
 			ctx.drawImage(this.img,
 				data.d[0], data.d[1], data.d[2], data.d[3],
-				x * size, y * size,
-				//Math.floor(5 * Size.r[world.pid] * size), Math.floor(5 * Size.r[world.pid] * size)
-				data.d[2], data.d[3]
+				x, y, data.d[2], data.d[3]
 			)
 		}
+
 		ctx.globalAlpha = 1
 
 		ctx.textAlign = 'right'
