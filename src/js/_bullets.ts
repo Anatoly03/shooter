@@ -467,7 +467,7 @@ export default [
 	},
 
 	/*
-	 * FILLING BULLETS (LUNATIC)
+	 * FILLING BULLETS (HARD | LUNATIC)
 	 * 
 	 * Fill the land with bullets that are only vibrating and then slowly sets them in random motion when everything is filled.
 	 */
