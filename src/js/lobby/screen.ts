@@ -45,6 +45,10 @@ export default {
 				if (this.selected == 0) this.selected = this.buttons.length - 1
 				else this.selected--
 				break
+
+			case 'arrowright':
+				// enter playing room
+				break
 		}
 	},
 
