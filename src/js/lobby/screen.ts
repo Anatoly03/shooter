@@ -21,16 +21,17 @@ export default {
 
 	render() {
 		ctx.strokeStyle = 'white'
-		ctx.fillStyle = 'white'
+		ctx.fillStyle = '#5f8fff'
 		ctx.font = '50px Righteous'
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
 
 		this.buttons.forEach((element: string, i: number) => {
-			if (this.selected == i)
+			if (this.selected == i) {
 				ctx.fillText(element, width * .5, height * .5 + (i * 60) - (this.buttons.length * 25))
-			else
+			} else {
 				ctx.strokeText(element, width * .5, height * .5 + (i * 60) - (this.buttons.length * 25))
+			}
 		})
 	},
 
