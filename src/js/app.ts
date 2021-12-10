@@ -1,5 +1,5 @@
 
-//import { game } from './game'
+import { game } from './game'
 import lobby from './screens/start'
 
 // 
@@ -31,8 +31,8 @@ export let app = {
 		this.update()
 		this.updateFPS()
 		this.addEventLiteners()
-		//game.init()
-		lobby.init()
+		game.init()
+		//lobby.init()
 	},
 	update() {
 		width = canvas.width = window.innerWidth
@@ -55,17 +55,17 @@ export let app = {
 		lastCalledTime = Date.now();
 		requestAnimationFrame(this.gameLoop.bind(this))
 		this.update()
-		//game.update()
-		//game.render()
-		lobby.update()
-		lobby.render()
+		game.update()
+		game.render()
+		//lobby.update()
+		//lobby.render()
 	},
 	addEventLiteners() {
 		// document.addEventListener('mouseover', event => {})
 
 		document.addEventListener('keydown', event => {
-			//game.onKeyDown(event)
-			lobby.onKeyDown(event)
+			game.onKeyDown(event)
+			//lobby.onKeyDown(event)
 			keys[event.key.toLowerCase()] = true
 			if (keys['f3']) {
 				DEBUG_MODE = !DEBUG_MODE
@@ -77,8 +77,8 @@ export let app = {
 		})
 
 		document.addEventListener('click', event => {
-			//game.onClick(event)
-			lobby.onClick(event)
+			game.onClick(event)
+			//lobby.onClick(event)
 		})
 
 		/*document.addEventListener('mousedown', event => {
