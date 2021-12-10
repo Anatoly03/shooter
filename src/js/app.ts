@@ -2,6 +2,17 @@
 //import { game } from './game'
 import lobby from './screens/start'
 
+// 
+// LOOK INTO
+//
+// https://www.spriters-resource.com/pc_computer/touhoufuujinrokumountainoffaith/sheet/51905/
+// https://www.spriters-resource.com/mobile/touhoulostword/sheet/157108/
+// https://www.spriters-resource.com/pc_computer/swr/sheet/21146/
+// https://www.spriters-resource.com/pc_computer/swr/sheet/14707/
+// https://www.spriters-resource.com/pc_computer/touhoupuppetdanceperformancetouhoumon/sheet/103792/
+// https://www.spriters-resource.com/search/?q=touhou
+//
+
 export let DEBUG_MODE: boolean
 
 export let width: number
