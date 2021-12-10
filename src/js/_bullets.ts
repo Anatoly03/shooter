@@ -479,6 +479,26 @@ export default [
 		let entities: number[] = []
 
 		for (let corner = 0; corner < 4; corner++) {
+			let asset = 'small-'
+
+			switch (corner) {
+				case 0:
+					asset += 'black'
+					break
+
+				case 1:
+					asset += 'red'
+					break
+
+				case 2:
+					asset += 'green'
+					break
+
+				case 3:
+					asset += 'orange'
+					break
+			}
+
 			go(async () => {
 				let radius = .03
 				// .65 ALSO POSSIBLE
@@ -496,7 +516,7 @@ export default [
 
 					let angle = Math.random() * Math.PI * 2
 
-					assignAsset(world, 'small-black', eid)
+					assignAsset(world, asset, eid)
 
 					Pos.x[eid] = Math.floor(corner / 2) + Math.sin(angle) * radius
 					Pos.y[eid] = corner % 2 + Math.cos(angle) * radius
