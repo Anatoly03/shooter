@@ -126,14 +126,16 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let amount = 500
+		let amount = 50
 		let circles = 3
-		let radius = .5
+		let radius = .4
 		let spirals = Math.ceil(Math.random() * 10) + 1
-		let radiusReduce = .99 + Math.random() * .009 - .001 * spirals //(.99 + Math.random() * .009) ** spirals // UNCOMMENT FOR MORE PINCH
+		let radiusReduce = .95 + Math.random() * .009 - .001 * spirals //(.99 + Math.random() * .009) ** spirals // UNCOMMENT FOR MORE PINCH
 
 		let m = 0
 		let mM = 1
+
+		let entities = []
 
 		for (let j = 0; j < amount * circles; j++) {
 			if (j % amount == 0) {
@@ -155,36 +157,49 @@ export default [
 					mM += 1
 				}
 
+				entities.push(eid)
+
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
 				addComponent(world, KillOutside, eid)
 
+				assignAsset(world, "small-orange", eid)
+
 				Pos.x[eid] = .5 + Math.sin(i / amount * 2 * Math.PI) * radius
 				Pos.y[eid] = .5 + Math.cos(i / amount * 2 * Math.PI) * radius
-				Size.r[eid] = .005
+				Size.r[eid] = .01
 
-				await wait(500 / ((j + 5) ** 5))
+				await wait(5)
+				//await wait(500 / ((j + 5) ** 5))
 
 				setTimeout(() => {
 					addComponent(world, Vel, eid)
 					addComponent(world, Acc, eid)
-					addComponent(world, ActiveBullet, eid)
+					//addComponent(world, ActiveBullet, eid)
 					//addComponent(world, ActiveBullet, eid)
 
-					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % m + 1) / amount //(Math.random() - .5) * .00001
-					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % m + 1) / amount //(Math.random() - .5) * .00001
+					Vel.x[eid] = - Math.sin(i / amount * 2 * Math.PI) * .1 * (j % m + 1) * .05 / m //(Math.random() - .5) * .00001
+					Vel.y[eid] = - Math.cos(i / amount * 2 * Math.PI) * .1 * (j % m + 1) * .05 / m //(Math.random() - .5) * .00001
 
-					Acc.x[eid] = Math.cos(i / amount * 2 * Math.PI) * .001 * (j % m + 1) / amount //(Math.random() - .5) * .00001
-					Acc.y[eid] = - Math.sin(i / amount * 2 * Math.PI) * .001 * (j % m + 1) / amount //(Math.random() - .5) * .00001
-				}, 100 * m)
+					Acc.x[eid] = Math.cos(i / amount * 2 * Math.PI) * .001 * (j % m + 1) * .0005 //(Math.random() - .5) * .00001
+					Acc.y[eid] = - Math.sin(i / amount * 2 * Math.PI) * .001 * (j % m + 1) * .0005 //(Math.random() - .5) * .00001
+				}, 100 * mM)
 			}
 
 			radius *= radiusReduce
 			//radius *= (j < amount * circles / 3) ? .99 : 1.01
 		}
 
-		await wait(17000)
+		await wait(5000)
+
+		for (let eid of entities) {
+			let angle = Math.atan2(Pos.x[eid] - .5, Pos.y[eid] - .5)
+			Acc.x[eid] = Math.sin(angle) * .00005
+			Acc.y[eid] = Math.cos(angle) * .00005
+		}
+
+		await wait(5000)
 
 		return world
 	},
