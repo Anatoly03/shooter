@@ -49,31 +49,38 @@ export const Acc = defineComponent({
 	y: Types.f64,
 })
 
+export const Size = defineComponent({
+	r: Types.f64,
+})
+
+// Create a one-directional force between two entities
+export const ForceArrow = defineComponent({
+	eid: Types.ui32, // eid of entity
+	tid: Types.ui32, // target eid
+	rot: Types.f64, // rotation: 0 = together, 1 = away from each other, 0.5 = circular around target
+	force: Types.f64, // force
+})
+
+export const Arrow = defineComponent({
+	eid: Types.ui32, // eid of entity
+	rot: Types.f64, // rotation: 0 = right, 1 = left, 0.5 = top, -0.5 = bottom
+	force: Types.f64, // force
+})
+
+//
+// Physics and Position
+//
+
 export const LimesVel = defineComponent({
 	x: Types.f64,
 	y: Types.f64,
 	f: Types.f64, // factor
 })
 
-export const Size = defineComponent({
-	r: Types.f64,
-})
-
-export const Gravity = defineComponent({
-	eid: Types.ui32,
-	force: Types.f64,
-})
-
 export const Vibration = defineComponent({
 	f: Types.f64,
 	ix: Types.f64,
 	iy: Types.f64,
-})
-
-export const Rotation = defineComponent({
-	eid: Types.ui32,
-	angle: Types.f64,
-	//rMod: Types.f64,
 })
 
 //

@@ -1,12 +1,14 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, Gravity, KillOutside, Point, ActiveBullet, LimesVel, Vibration, Rotation, Asset } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, KillOutside, Point, ActiveBullet, LimesVel, Vibration, ForceArrow, Arrow } from './comps'
 import { assignAsset } from './asset'
 
-const acc_gravity_query = defineQuery([Pos, Acc, Gravity])
+const force_arrow_query = defineQuery([ForceArrow])
+const arrow_query = defineQuery([Arrow])
+
 const vel_query = defineQuery([Vel, Acc])
 const limes_vel_query = defineQuery([Vel, LimesVel])
-const rotation_query = defineQuery([Pos, Rotation])
+
 const vibration_query = defineQuery([Pos, Vibration]) // Vel?
 const pos_query = defineQuery([Pos, Vel])
 const bullets_query = defineQuery([Bullet, ActiveBullet, Pos])
@@ -17,25 +19,56 @@ export default pipe(
 
 	/**
 	 * 
-	 * › SET ACCELERATION ‹
+	 * › FORCE ARROWS BETWEEN OBJECTS ‹
+	 *	
+	 */
+
+	(world: IWorld) => {
+		const arrows = force_arrow_query(world)
+
+		for (let i = 0; i < arrows.length; i++) {
+			const eid = arrows[i]
+
+			const ex = Pos.x[ForceArrow.eid[eid]]
+			const ey = Pos.y[ForceArrow.eid[eid]]
+
+			const tx = Pos.x[ForceArrow.tid[eid]]
+			const ty = Pos.y[ForceArrow.tid[eid]]
+
+			const angle = Math.atan2(tx - ex, ty - ey) + Math.PI * ForceArrow.rot[eid]
+			const dist = (tx - ex) ** 2 + (ty - ey) ** 2
+
+			const Comp = hasComponent(world, Pos, eid) ? Pos : hasComponent(world, Vel, eid) ? Vel : Acc
+
+			Comp.x[ForceArrow.eid[eid]] += dist * Math.sin(angle) * ForceArrow.force[eid]
+			Comp.y[ForceArrow.eid[eid]] += dist * Math.cos(angle) * ForceArrow.force[eid]
+		}
+
+		return world
+	},
+
+	/**
 	 * 
-	 * Acc <- Gravity, Pos
+	 * › FORCE ARROWS INTO DIRECTION ‹
 	 *
 	 */
 
 	(world: IWorld) => {
-		const entities = acc_gravity_query(world)
+		const arrows = arrow_query(world)
 
-		for (let i = 0; i < entities.length; i++) {
-			const eid = entities[i]
+		for (let i = 0; i < arrows.length; i++) {
+			const eid = arrows[i]
 
-			if (hasComponent(world, Pos, eid)) {
-				Acc.x[eid] += Gravity.force[eid] * (Pos.x[Gravity.eid[eid]] - Pos.x[eid])
-				Acc.y[eid] += Gravity.force[eid] * (Pos.y[Gravity.eid[eid]] - Pos.y[eid])
-				// F = r1, r2 / d^2
-				//Acc.x[eid] += Gravity.force[eid] * Math.sign(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) / Math.abs(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) ** 2
-				//Acc.y[eid] += Gravity.force[eid] * Math.sign(Pos.y[Gravity.eid[eid]] - Pos.y[eid]) / Math.abs(Pos.x[Gravity.eid[eid]] - Pos.x[eid]) ** 2
-			}
+			const ex = Pos.x[ForceArrow.eid[eid]]
+			const ey = Pos.y[ForceArrow.eid[eid]]
+
+			const angle = Math.PI * ForceArrow.rot[eid]
+			const dist = ex ** 2 + ey ** 2
+
+			const Comp = hasComponent(world, Pos, eid) ? Pos : hasComponent(world, Vel, eid) ? Vel : Acc
+
+			Comp.x[ForceArrow.eid[eid]] += dist * Math.sin(angle) * ForceArrow.force[eid]
+			Comp.y[ForceArrow.eid[eid]] += dist * Math.cos(angle) * ForceArrow.force[eid]
 		}
 
 		return world
@@ -81,40 +114,6 @@ export default pipe(
 
 			Vel.x[eid] += /*Math.sign*/ (LimesVel.x[eid] - Vel.x[eid]) * LimesVel.f[eid] // speed
 			Vel.y[eid] += /*Math.sign*/ (LimesVel.y[eid] - Vel.y[eid]) * LimesVel.f[eid] // speed
-		}
-
-		return world
-	},
-
-	/**
-	 * 
-	 * › ROTATION ‹
-	 *
-	 */
-
-	(world: IWorld) => {
-		const entities = rotation_query(world)
-
-		for (let i = 0; i < entities.length; i++) {
-			const eid = entities[i]
-
-			let xDif = Pos.x[Rotation.eid[eid]] - Pos.x[eid]
-			let yDif = Pos.y[Rotation.eid[eid]] - Pos.y[eid]
-			let dist = xDif ** 2 + yDif ** 2
-
-			let angle = Math.atan2(xDif, yDif) + Math.PI * .45
-
-			let newX = dist * Math.sin(angle)
-			let newY = dist * Math.cos(angle)
-
-			Pos.x[eid] += newX * Rotation.angle[eid] //Math.sin(angle) * Rotation.angle[eid]
-			Pos.y[eid] += newY * Rotation.angle[eid] //Math.cos(angle) * Rotation.angle[eid]
-
-			//Pos.x[eid] += Math.sin(angle) * Rotation.rMod[eid]
-			//Pos.y[eid] += Math.cos(angle) * Rotation.rMod[eid]
-			
-			//Rotation.angle[eid] 
-			//Vel.y[eid] += Rotation.angle[eid] 
 		}
 
 		return world

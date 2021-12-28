@@ -1,5 +1,5 @@
-import { addComponent, addEntity, IWorld, removeComponent } from "bitecs";
-import { Acc, ActiveBullet, Asset, Bullet, Gravity, KillOutside, LimesVel, Player, Pos, Rotation, Size, Vel, Vibration } from './comps'
+import { addComponent, addEntity, IWorld, removeComponent, removeEntity } from "bitecs";
+import { Acc, ActiveBullet, Bullet, KillOutside, LimesVel, Pos, Size, Vel, Vibration, ForceArrow, Arrow } from './comps'
 import { assignAsset } from './asset'
 
 export default [
@@ -410,10 +410,10 @@ export default [
 
 		for (let i = 0; i < amount; i++) {
 			let eid = addEntity(world)
+			let gravity = addEntity(world)
 
 			addComponent(world, Bullet, eid)
 			addComponent(world, ActiveBullet, eid)
-			addComponent(world, Gravity, eid)
 			addComponent(world, Pos, eid)
 			addComponent(world, Size, eid)
 			addComponent(world, Vel, eid)
@@ -425,8 +425,12 @@ export default [
 
 			Size.r[eid] = .005
 
-			Gravity.eid[eid] = world.pid
-			Gravity.force[eid] = .000005
+			addComponent(world, ForceArrow, gravity)
+			addComponent(world, Acc, gravity)
+
+			ForceArrow.eid[gravity] = eid
+			ForceArrow.tid[gravity] = world.pid
+			ForceArrow.force[gravity] = .000002
 
 			await wait(Math.random() * 30)
 		}
@@ -623,49 +627,73 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let shoots = 5 + Math.random() * 10
+		let times = 300 + Math.random() * 800
+
 		let entities = []
+		let arrows = []
 
-		for (let i = 0; i < shoots; i++) {
-			let amount = 50
-			let radius = Math.random() + 1.2
+		let center = addEntity(world)
+		addComponent(world, Pos, center)
 
-			let centerX = Math.random()
-			let centerY = Math.random()
+		Pos.x[center] = 0.5
+		Pos.y[center] = 0.5
 
-			for (let j = 0; j < amount; j++) {
-				let eid = addEntity(world)
-				entities.push(eid)
+		for (let j = 0; j < times; j++) {
+			let eid = addEntity(world)
+			let gravity = addEntity(world)
 
-				addComponent(world, Bullet, eid)
-				addComponent(world, Pos, eid)
-				addComponent(world, Size, eid)
-				addComponent(world, Vel, eid)
-				addComponent(world, ActiveBullet, eid)
-				addComponent(world, Rotation, eid)
+			entities.push(eid)
+			arrows.push(gravity)
 
-				Rotation.eid[eid] = world.pid
-				Rotation.angle[eid] = .05
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+			addComponent(world, Vel, eid)
+			addComponent(world, Acc, eid)
+			addComponent(world, ActiveBullet, eid)
 
-				Pos.x[eid] = centerX + Math.sin(j / amount * Math.PI * 2) * radius
-				Pos.y[eid] = centerY + Math.cos(j / amount * Math.PI * 2) * radius
-				Size.r[eid] = .01
+			let angle = Math.random() * Math.PI * 2
 
-				//Vel.x[eid] = Math.sin(i / amount * Math.PI * 2) * .001
-				//Vel.y[eid] = Math.cos(i / amount * Math.PI * 2) * .001
+			Pos.x[eid] = .5 + Math.sin(angle)
+			Pos.y[eid] = .5 + Math.cos(angle)
 
-				setTimeout(() => {
-					addComponent(world, KillOutside, eid)
-				}, 4000)
-			}
+			Size.r[eid] = .01
 
-			await wait(200)
+			addComponent(world, ForceArrow, gravity)
+			addComponent(world, Vel, gravity)
+
+			ForceArrow.eid[gravity] = eid
+			ForceArrow.tid[gravity] = center
+			ForceArrow.rot[gravity] = .05 //+ Math.random() * .1
+			ForceArrow.force[gravity] = .0005
+
+			await wait(j % 10)
 		}
 
 		//await wait(200)
 		//entities.forEach(eid => addComponent(world, ActiveBullet, eid))
 
-		await wait(10000)
+		arrows.forEach(eid => removeEntity(world, eid))
+		removeEntity(world, center)
+
+		entities.forEach(eid => {
+			//let gravity = addEntity(world)
+
+			/*addComponent(world, Arrow, gravity)
+			addComponent(world, Vel, gravity)
+
+			ForceArrow.eid[gravity] = eid
+			ForceArrow.rot[gravity] = .15
+			ForceArrow.force[gravity] = .01 * Math.min(Math.random(), .2)*/
+
+			let angle = Math.atan2(Pos.x[eid] - .5, Pos.y[eid] - .5)
+			Acc.x[eid] = Math.sin(angle) * .0005
+			Acc.y[eid] = Math.cos(angle) * .0005
+		})
+
+		await wait(2000)
+
+		entities.forEach(eid => removeEntity(world, eid))
 
 		return world
 	},
