@@ -586,7 +586,6 @@ export default [
 				addComponent(world, Bullet, eid)
 				addComponent(world, Pos, eid)
 				addComponent(world, Size, eid)
-				//addComponent(world, Gravity, eid)
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
 				addComponent(world, ActiveBullet, eid)
@@ -627,10 +626,10 @@ export default [
 	 */
 
 	async (world: IWorld) => {
-		let times = 300 + Math.random() * 800
+		let times = 300 + Math.random() * 400
 
 		let entities = []
-		let arrows = []
+		let arrows: number[] = []
 
 		let center = addEntity(world)
 		addComponent(world, Pos, center)
@@ -638,7 +637,7 @@ export default [
 		Pos.x[center] = 0.5
 		Pos.y[center] = 0.5
 
-		for (let j = 0; j < times; j++) {
+		for (let i = 0; i < times; i++) {
 			let eid = addEntity(world)
 			let gravity = addEntity(world)
 
@@ -652,6 +651,8 @@ export default [
 			addComponent(world, Acc, eid)
 			addComponent(world, ActiveBullet, eid)
 
+			assignAsset(world, 'small-black', eid)
+
 			let angle = Math.random() * Math.PI * 2
 
 			Pos.x[eid] = .5 + Math.sin(angle)
@@ -660,31 +661,32 @@ export default [
 			Size.r[eid] = .01
 
 			addComponent(world, ForceArrow, gravity)
-			addComponent(world, Vel, gravity)
+			addComponent(world, Pos, gravity)
 
 			ForceArrow.eid[gravity] = eid
 			ForceArrow.tid[gravity] = center
-			ForceArrow.rot[gravity] = .05 //+ Math.random() * .1
-			ForceArrow.force[gravity] = .0005
+			ForceArrow.rot[gravity] = .3 //+ Math.random() * .1
+			ForceArrow.force[gravity] = .15
 
-			await wait(j % 10)
+			await wait(i % 10)
 		}
 
-		//await wait(200)
 		//entities.forEach(eid => addComponent(world, ActiveBullet, eid))
 
 		arrows.forEach(eid => removeEntity(world, eid))
+		//arrows = []
 		removeEntity(world, center)
 
 		entities.forEach(eid => {
-			//let gravity = addEntity(world)
+			/*let gravity = addEntity(world)
+			arrows.push(gravity)
 
-			/*addComponent(world, Arrow, gravity)
+			addComponent(world, Arrow, gravity)
 			addComponent(world, Vel, gravity)
 
 			ForceArrow.eid[gravity] = eid
-			ForceArrow.rot[gravity] = .15
-			ForceArrow.force[gravity] = .01 * Math.min(Math.random(), .2)*/
+			ForceArrow.rot[gravity] = Math.atan2(Pos.x[eid] - .5, Pos.y[eid] - .5) / Math.PI
+			ForceArrow.force[gravity] = .0001*/
 
 			let angle = Math.atan2(Pos.x[eid] - .5, Pos.y[eid] - .5)
 			Acc.x[eid] = Math.sin(angle) * .0005
@@ -694,6 +696,7 @@ export default [
 		await wait(2000)
 
 		entities.forEach(eid => removeEntity(world, eid))
+		//arrows.forEach(eid => removeEntity(world, eid))
 
 		return world
 	},

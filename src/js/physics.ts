@@ -56,11 +56,16 @@ export default pipe(
 	(world: IWorld) => {
 		const arrows = arrow_query(world)
 
-		for (let i = 0; i < arrows.length; i++) {
+		// NEEDS SEMANTICAL REWORK!
+
+		/*for (let i = 0; i < arrows.length; i++) {
 			const eid = arrows[i]
 
 			const ex = Pos.x[ForceArrow.eid[eid]]
 			const ey = Pos.y[ForceArrow.eid[eid]]
+
+			const tx = Pos.x[ForceArrow.eid[eid]]
+			const ty = Pos.y[ForceArrow.eid[eid]]
 
 			const angle = Math.PI * ForceArrow.rot[eid]
 			const dist = ex ** 2 + ey ** 2
@@ -69,7 +74,7 @@ export default pipe(
 
 			Comp.x[ForceArrow.eid[eid]] += dist * Math.sin(angle) * ForceArrow.force[eid]
 			Comp.y[ForceArrow.eid[eid]] += dist * Math.cos(angle) * ForceArrow.force[eid]
-		}
+		}*/
 
 		return world
 	},
