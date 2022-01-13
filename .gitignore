@@ -13,3 +13,4 @@ dist
 dump.rdb
 .DS_Store
 tsconfig.json
+*._.DS_Store

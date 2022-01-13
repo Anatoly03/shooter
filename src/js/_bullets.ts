@@ -701,6 +701,162 @@ export default [
 		return world
 	},
 
+	/*
+	 * RAIN WITH NON PARALLEL BULLETS
+	 */
+
+	async (world: IWorld) => {
+		let entities = []
+		let times = Math.random() * 1000 + 1000
+		let acc = Math.random()
+		let dx = Math.random()
+		let cy = Math.random() * 0.09 - 0.1
+
+		for (let i = 0; i < times; i++) {
+			let eid = addEntity(world)
+
+			entities.push(eid)
+
+			addComponent(world, Bullet, eid)
+			addComponent(world, Pos, eid)
+			addComponent(world, Size, eid)
+			addComponent(world, Vel, eid)
+			addComponent(world, Acc, eid)
+			addComponent(world, ActiveBullet, eid)
+
+			assignAsset(world, 'small-black', eid)
+
+			let angle = (Math.random() - .5) * Math.PI
+
+			Pos.x[eid] = .5 + Math.sin(angle) * dx
+			Pos.y[eid] = cy
+
+			Vel.x[eid] = Math.sin(angle) * .005
+			Vel.y[eid] = Math.cos(angle) * .005
+
+			Acc.x[eid] = Math.sin(angle) * i * .0000001 * acc
+			Acc.y[eid] = Math.cos(angle) * i * .0000001 * acc
+
+			Size.r[eid] = .01
+
+			await wait(i % 10)
+		}
+
+		await wait(5000)
+
+		entities.forEach(eid => removeEntity(world, eid))
+		//arrows.forEach(eid => removeEntity(world, eid))
+
+		return world
+	},
+
+	/*
+	 * THAT ONE TIME IDEA
+	 */
+
+	async (world: IWorld) => {
+		let entities: number[] = []
+		let arrows: number[] = []
+		let is_rotating = false
+
+		let times = 3000 // 500 //1000
+
+		let center = addEntity(world)
+		addComponent(world, Pos, center)
+
+		Pos.x[center] = 0.5
+		//Pos.y[center] = 0.5
+
+		go(async () => {
+			for (let i = 0; i < times; i++) {
+				let eid = addEntity(world)
+
+				entities.push(eid)
+
+				addComponent(world, Bullet, eid)
+				addComponent(world, Pos, eid)
+				addComponent(world, Size, eid)
+				addComponent(world, Vel, eid)
+				addComponent(world, Acc, eid)
+				//addComponent(world, ActiveBullet, eid)
+
+				assignAsset(world, 'small-black', eid)
+
+				let angle = Math.sin(i) * Math.PI // ((i % 20) * 9 - 90) / 180 * Math.PI 
+
+				Pos.x[eid] = .5
+				Pos.y[eid] = -.01
+
+				Vel.x[eid] = Math.sin(angle) * .002 // * .01 / (i%10 + 1)
+				Vel.y[eid] = Math.cos(angle) * .002 // * .01 / (i%10 + 1)
+
+				//Acc.x[eid] = - Math.sin(angle) * .00005 // / (i%10 + 1)
+				//Acc.y[eid] = - Math.cos(angle) * .00005 // / (i%10 + 1)
+
+				Size.r[eid] = .01
+
+				if (is_rotating) {
+					let gvel = addEntity(world)
+					arrows.push(gvel)
+
+					addComponent(world, ForceArrow, gvel)
+					addComponent(world, Pos, gvel)
+
+					ForceArrow.eid[gvel] = eid
+					ForceArrow.tid[gvel] = center
+					ForceArrow.rot[gvel] = .8
+					ForceArrow.force[gvel] = .01
+				}
+
+				/*setTimeout(() => {
+					Acc.x[eid] = 0
+					Acc.y[eid] = 0
+		
+					Vel.x[eid] = 0
+					Vel.y[eid] = 0
+				}, 3300)*/
+
+				await wait(10)
+			}
+		})
+
+		await wait(10000)
+
+		is_rotating = true
+
+		entities.forEach(eid => {
+			let gvel = addEntity(world)
+			//let gpos = addEntity(world)
+
+
+			arrows.push(gvel)
+			//arrows.push(gpos)
+
+			addComponent(world, ForceArrow, gvel)
+			addComponent(world, Pos, gvel)
+
+			ForceArrow.eid[gvel] = eid
+			ForceArrow.tid[gvel] = center
+			ForceArrow.rot[gvel] = .5
+			ForceArrow.force[gvel] = .01
+
+			/*addComponent(world, ForceArrow, gpos)
+			addComponent(world, Pos, gpos)
+
+			ForceArrow.eid[gpos] = eid
+			ForceArrow.tid[gpos] = center
+			ForceArrow.rot[gpos] = .12 //.45
+			ForceArrow.force[gpos] = .01*/
+		})
+
+		await wait(10000)
+
+		entities.forEach(eid => removeEntity(world, eid))
+		arrows.forEach(eid => removeEntity(world, eid))
+
+		return world
+	},
+
 ]
 
 async function wait(ms: number) {
