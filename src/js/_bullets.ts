@@ -751,15 +751,14 @@ export default [
 	},
 
 	/*
-	 * THAT ONE TIME IDEA
+	 * QUICK DIAGONAL BULLETS
 	 */
 
 	async (world: IWorld) => {
 		let entities: number[] = []
 		let arrows: number[] = []
-		let is_rotating = false
 
-		let times = 3000 // 500 //1000
+		let times = Math.random() * 2000 + 1000
 
 		let center = addEntity(world)
 		addComponent(world, Pos, center)
@@ -778,6 +777,7 @@ export default [
 				addComponent(world, Size, eid)
 				addComponent(world, Vel, eid)
 				addComponent(world, Acc, eid)
+				addComponent(world, KillOutside, eid)
 				//addComponent(world, ActiveBullet, eid)
 
 				assignAsset(world, 'small-black', eid)
@@ -787,69 +787,20 @@ export default [
 				Pos.x[eid] = .5
 				Pos.y[eid] = -.01
 
-				Vel.x[eid] = Math.sin(angle) * .002 // * .01 / (i%10 + 1)
-				Vel.y[eid] = Math.cos(angle) * .002 // * .01 / (i%10 + 1)
+				Vel.x[eid] = Math.sin(angle) * .01 // * .01 / (i%10 + 1)
+				Vel.y[eid] = Math.cos(angle) * .01 // * .01 / (i%10 + 1)
 
-				//Acc.x[eid] = - Math.sin(angle) * .00005 // / (i%10 + 1)
-				//Acc.y[eid] = - Math.cos(angle) * .00005 // / (i%10 + 1)
+				Acc.x[eid] = - Math.sin(angle) * .00001 * (i % 3 + 1) // / (i%10 + 1)
+				Acc.y[eid] = - Math.cos(angle) * .00001 * (i % 3 + 1) // / (i%10 + 1)
 
 				Size.r[eid] = .01
 
-				if (is_rotating) {
-					let gvel = addEntity(world)
-					arrows.push(gvel)
-
-					addComponent(world, ForceArrow, gvel)
-					addComponent(world, Pos, gvel)
-
-					ForceArrow.eid[gvel] = eid
-					ForceArrow.tid[gvel] = center
-					ForceArrow.rot[gvel] = .8
-					ForceArrow.force[gvel] = .01
-				}
-
-				/*setTimeout(() => {
-					Acc.x[eid] = 0
-					Acc.y[eid] = 0
-		
-					Vel.x[eid] = 0
-					Vel.y[eid] = 0
-				}, 3300)*/
-
-				await wait(10)
+				if (i % 5 == 0)
+					await wait(10)
 			}
 		})
 
-		await wait(10000)
-
-		is_rotating = true
-
-		entities.forEach(eid => {
-			let gvel = addEntity(world)
-			//let gpos = addEntity(world)
-
-
-			arrows.push(gvel)
-			//arrows.push(gpos)
-
-			addComponent(world, ForceArrow, gvel)
-			addComponent(world, Pos, gvel)
-
-			ForceArrow.eid[gvel] = eid
-			ForceArrow.tid[gvel] = center
-			ForceArrow.rot[gvel] = .5
-			ForceArrow.force[gvel] = .01
-
-			/*addComponent(world, ForceArrow, gpos)
-			addComponent(world, Pos, gpos)
-
-			ForceArrow.eid[gpos] = eid
-			ForceArrow.tid[gpos] = center
-			ForceArrow.rot[gpos] = .12 //.45
-			ForceArrow.force[gpos] = .01*/
-		})
-
-		await wait(10000)
+		await wait(12000)
 
 		entities.forEach(eid => removeEntity(world, eid))
 		arrows.forEach(eid => removeEntity(world, eid))
