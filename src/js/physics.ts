@@ -1,8 +1,9 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, KillOutside, Point, ActiveBullet, LimesVel, Vibration, ForceArrow, Arrow } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, KillOutside, Point, ActiveBullet, LimesVel, Vibration, ForceArrow, Arrow, ChainElement } from './comps'
 import { assignAsset } from './asset'
 
+const chain_query = defineQuery([ChainElement])
 const force_arrow_query = defineQuery([ForceArrow])
 const arrow_query = defineQuery([Arrow])
 
@@ -16,6 +17,29 @@ const points_query = defineQuery([Point, Pos])
 const kill_query = defineQuery([Bullet, KillOutside])
 
 export default pipe(
+
+	/**
+	 * 
+	 * › FORCE CHAIN OF ENTITIES ‹
+	 *	
+	 */
+
+	(world: IWorld) => {
+		const nodes = chain_query(world)
+
+		for (let i = 0; i < nodes.length; i++) {
+			const eid = nodes[i]
+			const tid = ChainElement.follow[eid]
+
+			const angle = Math.atan2(Pos.x[tid] - Pos.x[eid], Pos.y[tid] - Pos.y[eid])
+			const vel = Math.sqrt(Vel.x[tid] ** 2 + Vel.y[tid] ** 2)
+
+			Vel.x[eid] = Math.sin(angle) * vel
+			Vel.y[eid] = Math.cos(angle) * vel
+		}
+
+		return world
+	},
 
 	/**
 	 * 

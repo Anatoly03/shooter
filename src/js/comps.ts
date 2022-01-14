@@ -53,7 +53,11 @@ export const Size = defineComponent({
 	r: Types.f64,
 })
 
+//
+// Arrows
 // Create a one-directional force between two entities
+//
+
 export const ForceArrow = defineComponent({
 	eid: Types.ui32, // eid of entity
 	tid: Types.ui32, // target eid
@@ -70,6 +74,10 @@ export const Arrow = defineComponent({
 //
 // Physics and Position
 //
+
+export const ChainElement = defineComponent({
+	follow: Types.ui32, // eid of entity to follow
+})
 
 export const LimesVel = defineComponent({
 	x: Types.f64,

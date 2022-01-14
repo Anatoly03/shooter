@@ -1,5 +1,5 @@
 import { addComponent, addEntity, IWorld, removeComponent, removeEntity } from "bitecs";
-import { Acc, ActiveBullet, Bullet, KillOutside, LimesVel, Pos, Size, Vel, Vibration, ForceArrow, Arrow } from './comps'
+import { Acc, ActiveBullet, Bullet, KillOutside, LimesVel, Pos, Size, Vel, Vibration, ChainElement, ForceArrow, Arrow } from './comps'
 import { assignAsset } from './asset'
 
 export default [
@@ -756,15 +756,7 @@ export default [
 
 	async (world: IWorld) => {
 		let entities: number[] = []
-		let arrows: number[] = []
-
 		let times = Math.random() * 2000 + 1000
-
-		let center = addEntity(world)
-		addComponent(world, Pos, center)
-
-		Pos.x[center] = 0.5
-		//Pos.y[center] = 0.5
 
 		go(async () => {
 			for (let i = 0; i < times; i++) {
@@ -798,6 +790,101 @@ export default [
 				if (i % 5 == 0)
 					await wait(10)
 			}
+		})
+
+		await wait(12000)
+
+		entities.forEach(eid => removeEntity(world, eid))
+
+		return world
+	},
+
+	/*
+	 * FOLLOWING LINES
+	 */
+
+	async (world: IWorld) => {
+		let entities: number[] = []
+		let lead: number[] = []
+		let arrows: number[] = []
+
+		let center = addEntity(world)
+		addComponent(world, Pos, center)
+
+		Pos.x[center] = 0.5
+		Pos.y[center] = 0.2
+
+		go(async () => {
+			let strings = 8
+
+			for (let i = 0; i < strings; i++) {
+				const angle = 2 * Math.PI * (i / strings)
+
+				go(async () => {
+					let next = null
+					for (let j = 0; j < 20; j++) {
+						let eid = addEntity(world)
+						entities.push(eid)
+
+						addComponent(world, Bullet, eid)
+						addComponent(world, Pos, eid)
+						addComponent(world, Size, eid)
+						addComponent(world, Vel, eid)
+						addComponent(world, Acc, eid)
+						addComponent(world, KillOutside, eid)
+
+						assignAsset(world, 'small-black', eid)
+
+						Pos.x[eid] = Pos.x[center]
+						Pos.y[eid] = Pos.y[center]
+
+						if (next) {
+							addComponent(world, ChainElement, eid)
+							ChainElement.follow[eid] = next
+
+							/*let gravity = addEntity(world)
+							arrows.push(gravity)
+
+							addComponent(world, ForceArrow, gravity)
+							addComponent(world, Vel, gravity)
+
+							ForceArrow.eid[gravity] = eid
+							ForceArrow.tid[gravity] = next
+							ForceArrow.rot[gravity] = 0
+							ForceArrow.force[gravity] = .001*/
+						} else {
+							lead.push(eid)
+						}
+						next = eid
+
+						Vel.x[eid] = Math.sin(angle) * .004
+						Vel.y[eid] = Math.cos(angle) * .004
+
+						Size.r[eid] = .01
+
+						await wait(80)
+					}
+				})
+			}
+		})
+
+		// 20 * 80 // + 200
+		await wait(1800)
+
+		Pos.x[center] = Pos.x[world.pid]
+		Pos.y[center] = Pos.y[world.pid]
+
+		lead.forEach(eid => {
+			let gravity = addEntity(world)
+			arrows.push(gravity)
+
+			addComponent(world, ForceArrow, gravity)
+			addComponent(world, Vel, gravity)
+
+			ForceArrow.eid[gravity] = eid
+			ForceArrow.tid[gravity] = center
+			ForceArrow.rot[gravity] = 0
+			ForceArrow.force[gravity] = .01
 		})
 
 		await wait(12000)
