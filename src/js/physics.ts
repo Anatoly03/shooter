@@ -1,6 +1,6 @@
 
 import { addComponent, addEntity, defineQuery, hasComponent, IWorld, pipe, removeEntity } from 'bitecs'
-import { Player, Vel, Acc, Pos, Size, Bullet, KillOutside, Point, ActiveBullet, LimesVel, Vibration, ForceArrow, Arrow, ChainElement } from './comps'
+import { Player, Vel, Acc, Pos, Size, Bullet, KillOutside, Point, ActiveBullet, LimesVel, Vibration, ForceArrow, Arrow, ChainElement, Flip } from './comps'
 import { assignAsset } from './asset'
 
 const chain_query = defineQuery([ChainElement])
@@ -9,6 +9,8 @@ const arrow_query = defineQuery([Arrow])
 
 const vel_query = defineQuery([Vel, Acc])
 const limes_vel_query = defineQuery([Vel, LimesVel])
+
+const flip_query = defineQuery([Pos, Flip])
 
 const vibration_query = defineQuery([Pos, Vibration]) // Vel?
 const pos_query = defineQuery([Pos, Vel])
@@ -143,6 +145,50 @@ export default pipe(
 
 			Vel.x[eid] += /*Math.sign*/ (LimesVel.x[eid] - Vel.x[eid]) * LimesVel.f[eid] // speed
 			Vel.y[eid] += /*Math.sign*/ (LimesVel.y[eid] - Vel.y[eid]) * LimesVel.f[eid] // speed
+		}
+
+		return world
+	},
+
+	/**
+	 * 
+	 * › FLIP QUERY ‹
+	 *
+	 */
+
+	(world: IWorld) => {
+		const entities = flip_query(world)
+
+		for (let i = 0; i < entities.length; i++) {
+			const eid = entities[i]
+
+			if (Pos.x[eid] < 0 || Pos.x[eid] > 1) {
+				if (Flip.x[eid] === 0) {
+					Flip.x[eid] = 1
+					if (hasComponent(world, Vel, eid)) {
+						Vel.x[eid] *= -1
+					}
+					if (hasComponent(world, Acc, eid)) {
+						Acc.x[eid] *= -1
+					}
+				}
+			} else {
+				Flip.x[eid] = 0
+			}
+
+			if (Pos.y[eid] < 0 || Pos.y[eid] > 1) {
+				if (Flip.y[eid] === 0) {
+					Flip.y[eid] = 1
+					if (hasComponent(world, Vel, eid)) {
+						Vel.y[eid] *= -1
+					}
+					if (hasComponent(world, Acc, eid)) {
+						Acc.y[eid] *= -1
+					}
+				}
+			} else {
+				Flip.y[eid] = 0
+			}
 		}
 
 		return world

@@ -75,6 +75,11 @@ export const Arrow = defineComponent({
 // Physics and Position
 //
 
+export const Flip = defineComponent({
+	x: Types.ui8,
+	y: Types.ui8,
+})
+
 export const ChainElement = defineComponent({
 	follow: Types.ui32, // eid of entity to follow
 })
