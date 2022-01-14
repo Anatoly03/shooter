@@ -815,7 +815,8 @@ export default [
 		Pos.y[center] = 0.2
 
 		go(async () => {
-			let strings = 8
+			let strings = 9 // 9, 19
+			let length = 30 // 50
 
 			for (let i = 0; i < strings; i++) {
 				const angle = 2 * Math.PI * (i / strings)
@@ -824,7 +825,7 @@ export default [
 					let eids = []
 
 					let next = null
-					for (let j = 0; j < 20; j++) {
+					for (let j = 0; j < length; j++) {
 						let eid = addEntity(world)
 						//entities.push(eid)
 						eids.push(eid)
@@ -835,14 +836,14 @@ export default [
 						addComponent(world, Vel, eid)
 						addComponent(world, Acc, eid)
 						addComponent(world, Flip, eid)
-						//addComponent(world, KillOutside, eid)
+						addComponent(world, ActiveBullet, eid)
 
 						assignAsset(world, 'small-black', eid)
 
 						Pos.x[eid] = 0.5
 						Pos.y[eid] = 0.2
 
-						Size.r[eid] = .01
+						Size.r[eid] = .005
 
 						if (next) {
 							addComponent(world, ChainElement, eid)
@@ -858,38 +859,26 @@ export default [
 						}
 						next = eid
 
-						await wait(50)
+						await wait(30)
 					}
-					
+
 					let gravity = addEntity(world)
 					arrows.push(gravity)
-		
+
 					addComponent(world, ForceArrow, gravity)
 					addComponent(world, Vel, gravity)
-		
+
 					ForceArrow.eid[gravity] = eids[0]
 					ForceArrow.tid[gravity] = world.pid //center
 					ForceArrow.rot[gravity] = 0
-					ForceArrow.force[gravity] = .0002
+					ForceArrow.force[gravity] = .0003 // .005 / .00005
 
 					entities.push(...eids)
 				})
 			}
 		})
 
-		// 20 * 80 // + 200
-		//await wait(800)
-
-		//Pos.x[center] = Pos.x[world.pid]
-		//Pos.y[center] = Pos.y[world.pid]
-
-		for (let i = 0; i < 20; i++) {
-			await wait(2000)
-			Pos.x[center] = Pos.x[world.pid]
-			Pos.y[center] = Pos.y[world.pid]
-		}
-
-		await wait(22000)
+		await wait(25000)
 
 		entities.forEach(eid => removeEntity(world, eid))
 		arrows.forEach(eid => removeEntity(world, eid))
