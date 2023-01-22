@@ -12,5 +12,5 @@ dist
 # Other
 dump.rdb
 .DS_Store
-tsconfig.json
+#tsconfig.json
 *._.DS_Store
